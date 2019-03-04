@@ -1,3 +1,8 @@
 Team name: memberlessTeam
-Team member zid:
-z5135152 yanning Cao
+
+Name: Yanning Cao
+zid: z5135152 
+
+Name: Katrina Ding
+zid: z5211336
+
