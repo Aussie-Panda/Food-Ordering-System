@@ -18,7 +18,7 @@
 **AC:**
 
 * **Two types of mains are offered: a burger or a wrap**.
-* **A customer can choose number of buns**(e.g., 3 sesame buns for a double burger or 2 muffin buns for a standard single burger) - the number of buns cannot exceed the maximum allowable limit (e.g., if only single, double and triple burgers are permitted, then the customer cannot choose more than 4 buns).
+* **A customer can choose number of buns**(e.g., 3 sesame buns for a double burger or 2 muffin buns for a standard single burger) - the number of buns cannot exceed the maximum allowable limit (e.g., if only single, double and triple burgesrs are permitted, then the customer cannot choose more than 4 buns).
 * **A customer can also choose number of patties** (e.g., 2 chicken patties, vegetarian, beef). here again, customers are restricted to the maximum allowable patties.
 * **Other ingredients of their choice should be provided** such as tomato, lettuce, tomato sauce, cheddar cheese, swiss cheese etc.
 * **The base price of the mains and he additional price of each ingredient carries is displaced next to them**.
