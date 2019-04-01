@@ -1,0 +1,108 @@
+Class:
+
+Ordering System:
+	
+	Attribute:
+		order
+		menu
+
+	methods:
+		
+		makeOrder(): make new order instance, if orderStatus == "Pending" and item not out of stock, append it to order list, else change back to "NotSubmitted" and redirect to menu page
+		checkStock(): check if a list of food is out of stock
+		updateOrder(): update order status
+		sendReceipt(): ask for user`s email, if imput is True, print "receipt sent"
+		displayMenue(): display menu list
+		getNextOrder(): get next order which has orderStatus == "Pending"
+		deleteOrder(): if orderStatus == "Picked Up", remove it from order list
+
+Order:
+	
+	Attribute:
+		orderID
+		orderedItem
+		orderStatus:
+			1. NotSubmitted
+			2. Pending
+			3. Preparing
+			4. Ready
+			5. Picked Up
+
+	methods:
+		computeNetPrice(): compute total price of the order
+		addFood(): append food to item list
+		modifyOrder(): if the customer change what he has ordered, modify order
+
+
+Stock:
+
+	Attributes:
+		mains: dictionary with key: buns/patties/wrapsss, value: amount
+		drinks: dictionary with key: bottles/cans/juice, value: amount(bottle/can/ml)
+		sides: dictionary with key: nuggets/fries, value: amount(unit/grams)
+		ingredients: dictionary with key: tomato/lettus/cheddar_cheese/swiss_cheese/tomato_sause, value: amount(serve)
+
+	methods:
+		changeQuantity(): increase/decrease food quantity in stock
+
+
+Food:
+	
+	Attribute:
+		name
+		price
+
+	Method:
+		computePrice(): seperately compute the total price of each type of food (mains/sides/drinks)
+
+
+Mains(Food):
+
+	Attribute:
+		ingredients: list of ingredient that have been ordered
+
+	methods:
+		changeIngredients(): append/delete ingredients to/from ingredients list
+
+
+
+Wrap(Mains):
+	
+	(Notes: name=="wrap")
+
+Burger(Mains)
+
+	Attribute:
+		numBun: minimum: 2, maximum: customize
+		numPat: number of patties, min: 0, max: customize
+		(Notes: name=="burger")
+
+
+	methods:
+		changeBuns(): change number of buns
+		changePatties(): change nubmer of patties
+
+
+Drinks(Food):
+
+	Attribute:
+		volumn (in ml)
+		drinksType (bottles/cans/smlJuice/medJuice)
+
+		(Notes: name can be: lrgFries/medFrice/smlFries/lrgNuggets/smlNuggets)
+
+
+Sides(Food):
+	
+	Attribute:
+		size (in grams)
+		
+		(Notes: name can be: lrgFries/medFrice/smlFries/lrgNuggets/smlNuggets)
+
+Ingredient(Food):
+	
+	Attribute:
+		amount (in serve)
+		
+		(Notes: name can be: tomato, lettus, cheddar_cheese, swiss_cheese, tomato_sause)
+
