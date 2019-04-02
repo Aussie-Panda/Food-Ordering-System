@@ -20,10 +20,8 @@ class OrderingSystem():
 			print(item)
 
 	'''
-	Function to make new order.
-	1. If no existed order passed in, make new one and checkStock. If some items are out of stock, return the order and set orderStatus as "Not Submitted", else, append it to order list and set status "Pending"
-	2. If an old order passed in, re-check stock. If there are still some items out of stock, return order; else, append it to order list and update status "Pending"
-
+	Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
+	append it to order list and set status as "Pending"
 	return value: order, [](if no StockError)/None, error list(if StockError)
 	'''
 	def makeOrder(self, food = None):
@@ -44,27 +42,27 @@ class OrderingSystem():
 		return new_order, []
 			
 	'''
-	Check if a list of food is out of stock
+	Check if a dictionary of food is out of stock
 	return value: None (void function)
 	'''
 	def checkStock(self, food):
 		emptyFood = []
 
-		for item in food:
+		for item in food.keys():
 			if item in Stock.mains:
-				if Stock.mains[item] == 0:
+				if Stock.mains[item] < food[item]:
 					emptyFood.append(item)
 
 			elif item in Stock.drinks:
-				if Stock.drinks[item] == 0:
+				if Stock.drinks[item] < food[item]:
 					emptyFood.append(item)
 
 			elif item in Stock.sides:
-				if Stock.sides[item] == 0:
+				if Stock.sides[item] < food[item]:
 					emptyFood.append(item)
 
 			elif item in Stock.ingredients:
-				if Stock.ingredients[item] == 0:
+				if Stock.ingredients[item] < food[item]:
 					emptyFood.append(item)
 
 		if emptyFood:
