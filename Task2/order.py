@@ -1,4 +1,4 @@
-from food import food
+from food import Food
 
 class Order():
 	def __init__(self, orderId, food, orderStatus = "Not Submitted"):

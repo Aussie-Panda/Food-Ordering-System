@@ -137,7 +137,6 @@ class OrderingSystem():
 		return None		# if no order matches the requesting status or id
 		
 
-
 	'''
 	Properties
 	'''
