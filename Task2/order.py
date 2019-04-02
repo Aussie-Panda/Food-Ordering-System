@@ -1,8 +1,5 @@
 from food import food
 
-
-
-
 class Order():
 	def __init__(self, orderId, food, orderStatus = "Not Submitted"):
 		self._orderId = orderId
@@ -28,6 +25,7 @@ class Order():
 	# update orderStatus
 	def updateOrder(self, status):
 		self.orderStatus = status
+		
 	''' 
 	Properties
 	'''

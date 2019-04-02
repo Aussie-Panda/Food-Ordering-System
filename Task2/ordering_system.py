@@ -14,8 +14,8 @@ class IdGenerator():
 
 class OrderingSystem():
 	def __init__(self):
-		self._order = []
-		self._menu = []
+		self._order = []	# order's id should be in increasing order
+		self._menu = []		# a list of all kind food
 
 
 	def displayMenu(self):
@@ -87,14 +87,69 @@ class OrderingSystem():
 	Ask for customer if they would like to enter email address and then send a receipt
 	return value: None (void function)
 	'''
-	def sendReceipt(self):
+	def sendReceipt(self,order):
+		assert(order != None)
+		send = input("Would you like to send a receit? (y/n): ")
+		food = '\n'.join(order.orderedItem)
+		receipt = f'----------\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\n\nThank you for ordering!\n----------'
+
+		if send == 'y':
+			email = ""
+			email += input("Please enter your email: ")
+			if email:
+				print("Your receipt has been sent to email " + email)
+				print(receipt)
+
+			elif not email:
+				print(receipt)
 
 
+	'''
+	Get next order either by status or particular id.
+	return value: order (if found)/None(if not found)
+	'''
 	def getNextOrder(self, status = None, id = None):
+		assert(status != None)
 
+		if id is None:
+			for i in self.order:
+				if i.order.orderStatus == status:
+					return i
 
-	def deleteOrder():
-	
+		elif id is not None:
+			for i in self.order:
+				if i.order.orderId == id:
+					return i
+
+			return None		# if no order matches the requesting status or id
+
+	'''
+	Delete the next order that has requesting status or id
+	return value: order (if found)/None(if not found)
+	'''
+	def deleteOrder(self, status = None, id = None):
+
+		if status is not None and id is None:
+			for i in self.order:
+				if i.order.orderStatus == status
+					self.order.remove(i)
+					return i
+
+		elif status is not None and id is not None:
+			for i in self.order:
+				if i.order.orderStatus == status and i.order.orderId == id:
+					self.order.remove(i)
+					return i
+
+		elif status is None and id is not None:
+			for i in self.order:
+				if i.order.orderId == id:
+					self.order.remove(i)
+					return i
+
+		return None		# if no order matches the requesting status or id
+		
+
 
 	'''
 	Properties
