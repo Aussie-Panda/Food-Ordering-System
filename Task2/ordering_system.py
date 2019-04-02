@@ -96,12 +96,17 @@ class OrderingSystem():
 		if send == 'y':
 			email = ""
 			email += input("Please enter your email: ")
-			if email:
-				print("Your receipt has been sent to email " + email)
-				print(receipt)
+			
+			while not email:
+				email += input("Please enter your email: ")
 
-			elif not email:
-				print(receipt)
+			
+			print("Your receipt has been sent to email " + email)
+			print(receipt)
+
+
+		else:
+			print(receipt)
 
 
 	'''
@@ -121,7 +126,7 @@ class OrderingSystem():
 				if i.order.orderId == id:
 					return i
 
-			return None		# if no order matches the requesting status or id
+		return None		# if no order matches the requesting status or id
 
 	'''
 	Delete the next order that has requesting status or id
