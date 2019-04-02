@@ -1,4 +1,3 @@
-#mains class
 class Mains():  #remeber to put food!!!!!!!!!!!
 
     def __init__(self):
@@ -18,8 +17,9 @@ class Mains():  #remeber to put food!!!!!!!!!!!
         assert(ingredient != None)
         assert(amount != None)
         
-        #change the amoun of the ingredient
         self.ingredients[ingredient] = amount
         
 
-
+m1 = Mains()
+m1.changeIngredients('shit',99)
+print(m1.ingredients)
