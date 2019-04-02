@@ -27,6 +27,7 @@ Order:
 			3. Preparing
 			4. Ready
 			5. Picked Up
+	
 
 	methods:
 		computeNetPrice(): compute total price of the order

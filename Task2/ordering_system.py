@@ -1,7 +1,7 @@
 from Food import Food
 from order import Order
 from stock import Stock
-from errors import StockError
+from errors import StockError, QuantityError
 
 
 class OrderingSystem():
@@ -38,6 +38,7 @@ class OrderingSystem():
 		newId = self.newId()
 		new_order = Order(newID, food, "Pending")
 		self.order.append(new_order)
+		print(f"Thank you, your order has been made.\nTotal Price:${new_order.computeNetPrice}")
 		
 		return new_order, []
 			
@@ -77,7 +78,7 @@ class OrderingSystem():
 		assert(order != None)
 		send = input("Would you like to send a receit? (y/n): ")
 		food = '\n'.join(order.orderedItem)
-		receipt = f'----------\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\n\nThank you for ordering!\n----------'
+		receipt = f'----------\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\nTotal Price: ${order.computeNetPrice()}\nThank you for ordering!\n----------'
 
 		if send == 'y':
 			email = ""

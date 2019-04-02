@@ -1,4 +1,4 @@
-from food import Fßood
+from food import Food
 
 class Order():
 	def __init__(self, orderId, food, orderStatus = "Not Submitted"):
@@ -15,7 +15,7 @@ class Order():
 			quantity = self.orderedItem[item]
 			totalPrice += (thisPrice * quantity)
 
-		return price
+		return totalPrice
 
 	
 	# Funciton to modify the order
