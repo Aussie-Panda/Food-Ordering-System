@@ -1,8 +1,12 @@
+
+#created by Yanning Cao from memberless Team
 #mains class
-class Mains():  #remeber to put food!!!!!!!!!!!
+from food import Food
 
-    def __init__(self):
+class Mains(Food):  
 
+    def __init__(self, name, price):
+        super().__init__(name, price)
         #list of ingredient that have been ordered
         self._ingredients = {}
 
@@ -21,5 +25,14 @@ class Mains():  #remeber to put food!!!!!!!!!!!
         #change the amoun of the ingredient
         self.ingredients[ingredient] = amount
         
+    def computePrice(self):
+        pass
 
 
+'''
+# For simple testing
+m1 = Mains('shit',9999999999)
+m1.changeIngredients('shit',99)
+print(m1.name)
+print(m1.price)
+'''

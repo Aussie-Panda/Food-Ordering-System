@@ -17,21 +17,7 @@ Ordering System:
 		deleteOrder(): if orderStatus == "Picked Up", remove it from order list
 
 Order:
-	
-	Attribute:
-		orderID
-		orderedItem
-		orderStatus:
-			1. NotSubmitted
-			2. Pending
-			3. Preparing
-			4. Ready
-			5. Picked Up
-
-	methods:
-		computeNetPrice(): compute total price of the order
-		addFood(): append food to item list
-		modifyOrder(): if the customer change what he has ordered, modify order
+	`what he has ordered, modify order
 
 
 Stock:
