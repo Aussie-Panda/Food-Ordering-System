@@ -10,7 +10,7 @@ Ordering System:
 		
 		makeOrder(): make new order instance, if orderStatus == "Pending" and item not out of stock, append it to order list, else change back to "NotSubmitted" and redirect to menu page
 		checkStock(): check if a list of food is out of stock
-		updateOrder(): update order status
+		
 		sendReceipt(): ask for user`s email, if imput is True, print "receipt sent"
 		displayMenue(): display menu list
 		getNextOrder(): get next order which has orderStatus == "Pending"
@@ -19,10 +19,10 @@ Ordering System:
 Order:
 	
 	Attribute:
-		orderID
+		orderId
 		orderedItem
 		orderStatus:
-			1. NotSubmitted
+			1. Not Submitted
 			2. Pending
 			3. Preparing
 			4. Ready
@@ -30,9 +30,8 @@ Order:
 
 	methods:
 		computeNetPrice(): compute total price of the order
-		addFood(): append food to item list
 		modifyOrder(): if the customer change what he has ordered, modify order
-
+		updateOrder(): update order status
 
 Stock:
 
