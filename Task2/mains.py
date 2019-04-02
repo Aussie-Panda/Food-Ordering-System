@@ -25,8 +25,26 @@ class Mains(Food):
         #change the amoun of the ingredient
         self.ingredients[ingredient] = amount
         
+    
     def computePrice(self):
         pass
+
+class Burger(Mains):
+
+    def __init__(self, numBun, numPat):
+        super().__init__('Burger', 5)
+        self._numBun = numBun
+        self._numPat = numPat
+        self._bunPrice = 1
+        self._patPrice = 2
+
+    def computePrice(self):
+        total = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
+        return total
+
+
+#class Wrap(Mains):
+
 
 
 '''
@@ -36,3 +54,10 @@ m1.changeIngredients('shit',99)
 print(m1.name)
 print(m1.price)
 '''
+
+#test burgers
+bug = Burger(2,2)
+print(bug._name)
+print(bug._price)
+price = bug.computePrice()
+print(price)
