@@ -1,22 +1,19 @@
 from Food import Food
 from order import Order
 from stock import Stock
+from errors import StockError
 
 
-class IdGenerator():
-
+class OrderingSystem():
 	def __init__(self):
 		self._id = 0
+		self._order = []	# order's id should be in increasing order
+		self._menu = []		# a list of all kind food
+
 
 	def newId(self):
 		self._id += 1
 		return self._id
-
-class OrderingSystem():
-	def __init__(self):
-		self._order = []	# order's id should be in increasing order
-		self._menu = []		# a list of all kind food
-
 
 	def displayMenu(self):
 		for item in self.menu:
@@ -27,48 +24,38 @@ class OrderingSystem():
 	1. If no existed order passed in, make new one and checkStock. If some items are out of stock, return the order and set orderStatus as "Not Submitted", else, append it to order list and set status "Pending"
 	2. If an old order passed in, re-check stock. If there are still some items out of stock, return order; else, append it to order list and update status "Pending"
 
-	return value: order
+	return value: order, [](if no StockError)/None, error list(if StockError)
 	'''
-	def makeOrder(self, old_order = None, food = None):
+	def makeOrder(self, food = None):
 		
 		assert(food != None)
 
-		if order==None:
-			newId = IdGenerator.newId()
-			emptyFood = checkStock(food)
-			if emptyFood:
-				new_order = Order(newID,food,"Not Submitted")
-			else:
-				new_order = Order(newID, food, "Pending")
-				self.order.append(new_order)
-				
-			return new_order
+		
+		try:
+			self.checkStock(food)
 
-		else:
-			assert(old_order != None)
-			emptyFood = checkStock(food)
-			if emptyFood:
-				old_order.modifyOrder(food)
-			else:
-				old_order.modifyOrder(food)
-				order.updateOrder("Pending")
-				self.order.append(old_order)
+		except StockError as er:
+			return None, er.errors
 
-			return old_order
+		newId = self.newId()
+		new_order = Order(newID, food, "Pending")
+		self.order.append(new_order)
+		
+		return new_order, []
 			
 	'''
 	Check if a list of food is out of stock
-	return value: list of out-of-store food
+	return value: None (void function)
 	'''
-	def checkStock(self, order):
+	def checkStock(self, food):
 		emptyFood = []
 
-		for item in order.orderedItem:
+		for item in food:
 			if item in Stock.mains:
 				if Stock.mains[item] == 0:
 					emptyFood.append(item)
 
-			elif item in  Stock.drinks:
+			elif item in Stock.drinks:
 				if Stock.drinks[item] == 0:
 					emptyFood.append(item)
 
@@ -80,7 +67,8 @@ class OrderingSystem():
 				if Stock.ingredients[item] == 0:
 					emptyFood.append(item)
 
-		return emptyFood
+		if emptyFood:
+			raise StockError(emptyFood)
 
 
 	'''
@@ -129,24 +117,18 @@ class OrderingSystem():
 		return None		# if no order matches the requesting status or id
 
 	'''
-	Delete the next order that has requesting status or id
+	Delete the next order that has requesting status or particular id
 	return value: order (if found)/None(if not found)
 	'''
 	def deleteOrder(self, status = None, id = None):
 
-		if status is not None and id is None:
+		if id is None:
 			for i in self.order:
 				if i.order.orderStatus == status
 					self.order.remove(i)
 					return i
 
-		elif status is not None and id is not None:
-			for i in self.order:
-				if i.order.orderStatus == status and i.order.orderId == id:
-					self.order.remove(i)
-					return i
-
-		elif status is None and id is not None:
+		elif id is not None:
 			for i in self.order:
 				if i.order.orderId == id:
 					self.order.remove(i)
