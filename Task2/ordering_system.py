@@ -1,13 +1,13 @@
 from food import Food
 from order import Order
-from stock import Stock
+# from stock import Stock
 from errors import StockError, QuantityError
 
 
 class OrderingSystem():
 	def __init__(self):
 		self._id = 0
-		self._order = []	# order's id should be in increasing order
+		self._order = []	# a list of Order. order's id should be in increasing order
 		self._menu = []		# a list of all kind food
 
 
@@ -16,8 +16,16 @@ class OrderingSystem():
 		return self._id
 
 	def displayMenu(self):
+		print("--------MENU--------")
 		for item in self.menu:
 			print(item)
+		print("-------End of Menu-------")
+
+	def getFood(self,name):
+		for i in self.menu:
+			if i.name == name:
+				return i
+		return None
 
 	'''
 	Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
@@ -28,17 +36,20 @@ class OrderingSystem():
 		
 		assert(food != None)
 
-		
+		'''
 		try:
 			self.checkStock(food)
 
 		except StockError as er:
 			return None, er.errors
-
+		'''
 		newId = self.newId()
-		new_order = Order(newID, food, "Pending")
+		new_order = Order(newId, food, "Pending")
+		# print(new_order)
 		self.order.append(new_order)
-		print(f"Thank you, your order has been made.\nTotal Price:${new_order.computeNetPrice}")
+		
+		price = new_order.computeNetPrice()
+		print(f"Thank you, your order has been made.\nTotal Price: ${price}")
 		
 		return new_order, []
 			
@@ -50,20 +61,20 @@ class OrderingSystem():
 		emptyFood = []
 
 		for item in food.keys():
-			if item in Stock.mains:
-				if Stock.mains[item] < food[item]:
+			if item.name in Stock.mains:
+				if Stock.mains[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.drinks:
-				if Stock.drinks[item] < food[item]:
+			elif item.name in Stock.drinks:
+				if Stock.drinks[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.sides:
-				if Stock.sides[item] < food[item]:
+			elif item.name in Stock.sides:
+				if Stock.sides[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.ingredients:
-				if Stock.ingredients[item] < food[item]:
+			elif item.name in Stock.ingredients:
+				if Stock.ingredients[item.name] < food[item]:
 					emptyFood.append(item)
 
 		if emptyFood:
@@ -76,10 +87,13 @@ class OrderingSystem():
 	'''
 	def sendReceipt(self,order):
 		assert(order != None)
-		send = input("Would you like to send a receit? (y/n): ")
-		food = '\n'.join(order.orderedItem)
-		receipt = f'----------\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\nTotal Price: ${order.computeNetPrice()}\nThank you for ordering!\n----------'
-
+		send = 'n'
+		# send = input("Would you like to send a receit? (y/n): ")
+		'''
+		price = order.computeNetPrice
+		receipt = f'------Receipt-----\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\nTotal Price: ${price}\nThank you for ordering!\n--------End of Receipt-------'
+		'''
+		receipt = f'---------Receipt--------\n{order}\n--------End of Receipt--------'
 		if send == 'y':
 			email = ""
 			email += input("Please enter your email: ")
@@ -101,16 +115,15 @@ class OrderingSystem():
 	return value: order (if found)/None(if not found)
 	'''
 	def getNextOrder(self, status = None, id = None):
-		assert(status != None)
 
 		if id is None:
 			for i in self.order:
-				if i.order.orderStatus == status:
+				if i.orderStatus == status:
 					return i
 
 		elif id is not None:
 			for i in self.order:
-				if i.order.orderId == id:
+				if i.orderId == id:
 					return i
 
 		return None		# if no order matches the requesting status or id
@@ -123,13 +136,13 @@ class OrderingSystem():
 
 		if id is None:
 			for i in self.order:
-				if i.order.orderStatus == status
+				if i.orderStatus == status:
 					self.order.remove(i)
 					return i
 
 		elif id is not None:
 			for i in self.order:
-				if i.order.orderId == id:
+				if i.orderId == id:
 					self.order.remove(i)
 					return i
 

@@ -7,7 +7,7 @@ Ordering System:
 		menu
 
 	methods:
-		
+		getFood(): get food instance from menu
 		makeOrder(): make new order instance, if orderStatus == "Pending" and item not out of stock, append it to order list, else change back to "NotSubmitted" and redirect to menu page
 		checkStock(): check if a list of food is out of stock
 		
@@ -30,6 +30,7 @@ Order:
 	
 
 	methods:
+		getFood(): get food instance form orderedItem
 		computeNetPrice(): compute total price of the order
 		modifyOrder(): if the customer change what he has ordered, modify order
 		updateOrder(): update order status
