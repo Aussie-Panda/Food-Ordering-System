@@ -22,7 +22,7 @@ def sys():
 	return sys
 
 
-def test_system(sys):
+def test_system_and_order(sys):
 	
 	sys.displayMenu()
 
@@ -31,7 +31,7 @@ def test_system(sys):
 	fl1 = {sys.getFood('chicken'): 3, sys.getFood('duck'): 4, sys.getFood('beef'): 8}
 	fl2 = {sys.getFood('pen1'): 4, sys.getFood('pen2'): 8, sys.getFood('pen3'): 9}
 
-	# test makeOrder()
+	# test makeOrder() and computeNetPrice()
 	o1, errors = sys.makeOrder(fl1)
 	assert(not errors)
 	price = o1.computeNetPrice()
@@ -54,7 +54,19 @@ def test_system(sys):
 	nextOrder = sys.getNextOrder("random")
 	assert(not nextOrder)
 
-	# test deleteOrder()	
+	# test modifyOrder()
+	f7 = Mains('eraser', 3)
+	o2.modifyOrder(f7,3)
+	assert(len(o2.orderedItem) == 4)
+	
+	o2.modifyOrder(f7,0)
+	assert(len(o2.orderedItem) == 3)
+	assert(f7 not in o2.orderedItem)
+
+	o2.modifyOrder(sys.getFood('pen1'), 2)
+	assert(o2.orderedItem[o2.getFood('pen1')] == 2)
+
+	# test updateOrder() and deleteOrder()	
 	o2.updateOrder("Ready")
 	trashOrder = sys.deleteOrder("Ready")
 	trashOrder = sys.deleteOrder(None,1)
