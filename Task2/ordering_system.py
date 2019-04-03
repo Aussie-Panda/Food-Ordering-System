@@ -1,4 +1,4 @@
-from Food import Food
+from food import Food
 from order import Order
 from stock import Stock
 from errors import StockError, QuantityError
