@@ -43,7 +43,16 @@ class Burger(Mains):
         return total
 
 
-#class Wrap(Mains):
+class Wrap(Mains):
+
+    def __init__(self,numPat):
+        super().__init__('Wrap',4)
+        self._numPat = numPat
+        self._patPrice = 1
+
+    def computePrice(self):
+        total = self._price + self._numPat * self._patPrice
+        return total
 
 
 
@@ -55,9 +64,13 @@ print(m1.name)
 print(m1.price)
 '''
 
-#test burgers
+#test burgers and wraps
 bug = Burger(2,2)
 print(bug._name)
 print(bug._price)
 price = bug.computePrice()
 print(price)
+
+wrap = Wrap(2)
+price2 = wrap.computePrice()
+print(price2)

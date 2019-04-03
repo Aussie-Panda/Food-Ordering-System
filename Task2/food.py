@@ -23,3 +23,5 @@ class Food(ABC):
     def computePrice(self):
         pass
 
+    def __str__(self):
+        return f"{self.name}: ${self.price}"
