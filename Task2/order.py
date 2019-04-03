@@ -7,6 +7,12 @@ class Order():
         self._orderStatus = orderStatus # string
 
 
+    def getFood(self,name):
+        for i in self.orderedItem:
+            if i.name == name:
+                return i
+        return None
+
     # compute total price of the order
     def computeNetPrice(self):
         totalPrice = 0
@@ -17,6 +23,7 @@ class Order():
 
 
         return totalPrice
+
 
     
     # Funciton to modify the order
@@ -57,7 +64,7 @@ class Order():
             quantity = str(self._orderedItem[i])
             msg += f"{i} * {quantity}\n"
         msg += f"Order status: {self._orderStatus}\n"
-        msg += f"Total Price: {price}"
+        msg += f"Total Price: ${price}"
         return msg
 
     ''' 
