@@ -9,10 +9,6 @@ import pytest
 @pytest.fixture
 def sys():
 	sys = OrderingSystem()
-	return sys
-
-
-def test_system(sys):
 	f1 = Mains('chicken', 5)
 	f2 = Mains('duck', 3)
 	f3 = Mains('beef', 8)
@@ -22,6 +18,12 @@ def test_system(sys):
 
 	# test menu
 	sys._menu = [f1, f2, f3, f4, f5, f6]
+	
+	return sys
+
+
+def test_system(sys):
+	
 	sys.displayMenu()
 
 	fl1 = {f1: 3, f2: 4, f3: 8}
