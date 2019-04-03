@@ -54,8 +54,8 @@ class Order():
         msg += f"Order id: {self._orderId}\n"
         msg += "Order items:\n"
         for i in self._orderedItem.keys():
-            iStr = str(self._orderedItem[i])
-            msg += f"{i} * {iStr}\n"
+            quantity = str(self._orderedItem[i])
+            msg += f"{i} * {quantity}\n"
         msg += f"Order status: {self._orderStatus}\n"
         msg += f"Total Price: {price}"
         return msg

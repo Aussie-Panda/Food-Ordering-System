@@ -21,6 +21,12 @@ class OrderingSystem():
 			print(item)
 		print("-------End of Menu-------")
 
+	def getFood(self,name):
+		for i in self.menu:
+			if i.name == name:
+				return i
+		return None
+
 	'''
 	Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
 	append it to order list and set status as "Pending"

@@ -18,7 +18,7 @@ def sys():
 
 	# test menu
 	sys._menu = [f1, f2, f3, f4, f5, f6]
-	
+
 	return sys
 
 
@@ -26,8 +26,10 @@ def test_system(sys):
 	
 	sys.displayMenu()
 
-	fl1 = {f1: 3, f2: 4, f3: 8}
-	fl2 = {f4: 4, f5: 8, f6: 9}
+	# start ordering
+
+	fl1 = {sys.getFood('chicken'): 3, sys.getFood('duck'): 4, sys.getFood('beef'): 8}
+	fl2 = {sys.getFood('pen1'): 4, sys.getFood('pen2'): 8, sys.getFood('pen3'): 9}
 
 	# test makeOrder()
 	o1, errors = sys.makeOrder(fl1)
