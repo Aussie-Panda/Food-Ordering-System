@@ -33,6 +33,7 @@ class Mains(Food):
     def computePrice(self):
         pass
 
+
 class Burger(Mains):
 
     def __init__(self, numBun, numPat):
@@ -50,6 +51,13 @@ class Burger(Mains):
         total = ingridient_price + burger_price
         return total
 
+    def __str__(self): 
+        msg = f"Buger: Buns * {self._numBun}, Patties * {self._numPat}.\n  Ingredients: "
+        for elem in self.ingredientsOrdered.keys():
+            msg += f"{elem} * {self.ingredientsOrdered[elem]}, "
+
+        return msg
+
 
 class Wrap(Mains):
 
@@ -66,7 +74,12 @@ class Wrap(Mains):
         total += ingridient_price
         return total
 
+    def __str__(self): 
+        msg = f"Wrap: Patties * {self._numPat}.\n  Ingredients: "
+        for elem in self.ingredientsOrdered.keys():
+            msg += f"{elem} * {self.ingredientsOrdered[elem]}, "
 
+        return msg
 
 '''
 # For simple testing
@@ -81,6 +94,7 @@ bug = Burger(2,2)
 print(bug._name)
 print(bug._price)
 bug.changeIngredients('tomato', 10)
+bug.changeIngredients('lettuce', 10)
 price = bug.computePrice()
 print(price)
 
@@ -89,5 +103,11 @@ wrap.changeIngredients('lettuce', 10)
 price2 = wrap.computePrice()
 print(price2)
 
+print(bug)
+print(wrap)
+print(bug)
+print(bug)
+print(bug)
+print(bug)
 
 
