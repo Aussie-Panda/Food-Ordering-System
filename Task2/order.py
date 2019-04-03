@@ -56,7 +56,7 @@ class Order():
         for i in self._orderedItem.keys():
             iStr = str(self._orderedItem[i])
             msg += f"{i} * {iStr}\n"
-        msg += f"Order status: {self._orderStatus}"
+        msg += f"Order status: {self._orderStatus}\n"
         msg += f"Total Price: {price}"
         return msg
 
