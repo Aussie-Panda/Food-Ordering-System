@@ -55,9 +55,11 @@ print(m1.name)
 print(m1.price)
 '''
 
+'''
 #test burgers
 bug = Burger(2,2)
 print(bug._name)
 print(bug._price)
 price = bug.computePrice()
 print(price)
+'''
