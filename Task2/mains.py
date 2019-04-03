@@ -7,14 +7,18 @@ class Mains(Food):
 
     def __init__(self, name, price):
         super().__init__(name, price)
-        #list of ingredient that have been ordered
-        self._ingredients = {}
-
+        #dictionary of ingredient that have been ordered
+        self._ingredientsOrdered = {}
+        self._ingredientsMenu = {'tomato': 1, 'lettuce' : 1, 'cheddar_cheese' : 2, 'swisse_cheese' : 3, 'tomato_sauce' : 1}
     
     #getters and setters
     @property
-    def ingredients(self):
-        return self._ingredients
+    def ingredientsOrdered(self):
+        return self._ingredientsOrdered
+
+    @property
+    def ingredientsMenu(self):
+        return self._ingredientsMenu
 
     #method can be add or delete ingridient is one of the elem in the list
     def changeIngredients(self, ingredient, amount = None):
@@ -23,7 +27,7 @@ class Mains(Food):
         assert(amount != None)
         
         #change the amoun of the ingredient
-        self.ingredients[ingredient] = amount
+        self.ingredientsOrdered[ingredient] = amount
         
     
     def computePrice(self):
@@ -39,7 +43,11 @@ class Burger(Mains):
         self._patPrice = 2
 
     def computePrice(self):
-        total = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
+        burger_price = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
+        ingridient_price = 0
+        for elem in self.ingredientsOrdered.keys():
+            ingridient_price += self.ingredientsOrdered[elem] * self.ingredientsMenu[elem]
+        total = ingridient_price + burger_price
         return total
 
 
@@ -48,10 +56,14 @@ class Wrap(Mains):
     def __init__(self,numPat):
         super().__init__('Wrap',4)
         self._numPat = numPat
-        self._patPrice = 1
+        self._patPrice = 2
 
     def computePrice(self):
         total = self._price + self._numPat * self._patPrice
+        ingridient_price = 0
+        for elem in self.ingredientsOrdered.keys():
+            ingridient_price += self.ingredientsOrdered[elem] * self.ingredientsMenu[elem]
+        total += ingridient_price
         return total
 
 
@@ -68,9 +80,14 @@ print(m1.price)
 bug = Burger(2,2)
 print(bug._name)
 print(bug._price)
+bug.changeIngredients('tomato', 10)
 price = bug.computePrice()
 print(price)
 
 wrap = Wrap(2)
+wrap.changeIngredients('lettuce', 10)
 price2 = wrap.computePrice()
 print(price2)
+
+
+

@@ -18,7 +18,6 @@ class Food(ABC):
     def price(self):
         return self._price
 
-    #implement this later!!!!!!!!!!!!!!!
     @abstractmethod
     def computePrice(self):
         pass
