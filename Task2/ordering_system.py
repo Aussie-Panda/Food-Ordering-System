@@ -61,20 +61,20 @@ class OrderingSystem():
 		emptyFood = []
 
 		for item in food.keys():
-			if item in Stock.mains:
-				if Stock.mains[item] < food[item]:
+			if item.name in Stock.mains:
+				if Stock.mains[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.drinks:
-				if Stock.drinks[item] < food[item]:
+			elif item.name in Stock.drinks:
+				if Stock.drinks[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.sides:
-				if Stock.sides[item] < food[item]:
+			elif item.name in Stock.sides:
+				if Stock.sides[item.name] < food[item]:
 					emptyFood.append(item)
 
-			elif item in Stock.ingredients:
-				if Stock.ingredients[item] < food[item]:
+			elif item.name in Stock.ingredients:
+				if Stock.ingredients[item.name] < food[item]:
 					emptyFood.append(item)
 
 		if emptyFood:

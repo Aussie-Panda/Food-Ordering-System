@@ -14,6 +14,7 @@ class Order():
         return None
 
     # compute total price of the order
+    # need to be change if Burger and wrap is ready.
     def computeNetPrice(self):
         totalPrice = 0
         for item in self.orderedItem.keys():
