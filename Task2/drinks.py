@@ -1,17 +1,17 @@
 from food import Food
 
-class Sides(Food):
+class Drinks(Food):
 	def __init__(self, name, price, size, type):
 		super().__init__(name, price)
 		self._size = size
 		self._type = type
 
 	@property
-	def size(self):
+	def volume(self):
 		return self._size
 
-	@size.setter
-	def size(self, size):
+	@volume.setter
+	def volume(self, volume):
 		self._size = size
 
 	@property
@@ -26,14 +26,4 @@ class Sides(Food):
         	pass
 
 	def __str__(self):
-		return "{}: {} {} for ${}".format(self.type, self.size, self.name, self.price)
-
-#x = Sides('fries', 2, 'large', 'Side')
-#print(x)
-#print(x.size)
-#print(x.type)
-#x.size = 'medium'
-#print(x.size)
-#x.type = 'Test'
-#print(x.type)
-#print(x)
+		return "{}: {}ml {} for ${}".format(self.type, self.size, self.name, self.price)
