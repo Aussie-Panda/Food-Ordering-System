@@ -22,5 +22,18 @@ class Drinks(Food):
 	def type(self, type):
 		self._type = type
 
+	def computePrice(self):
+        	pass
+
 	def __str__(self):
+		return "{}: {}ml {} for ${}".format(self.type, self.volume, self.name, self.price) 
 		
+#x = Drinks('can', 2, 375, 'Drink')
+#print(x)
+#print(x.volume)
+#print(x.type)
+#x.volume = 600
+#print(x.volume)
+#x.type = 'Test'
+#print(x.type)
+#print(x)

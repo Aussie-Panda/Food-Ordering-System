@@ -6,10 +6,22 @@ class Stock():
 		self._ingredients = {'tomato': 0, 'lettuce' : 0, 'cheddar_cheese' : 0, 'swiss_cheese' : 0, 'tomato_sauce' : 0}
 
 	@property
-	def getMains(self):
+	def mains(self):
 		return self._mains
 
-	def changeQuantity(self, item, amount):
+	@property
+	def drinks(self):
+		return self._drinks
+
+	@property
+	def sides(self):
+		return self._sides
+	
+	@property
+	def ingredients(self):
+		return self._ingredients
+
+	def addQuantity(self, item, amount):
 		assert(item != None)
 		assert(amount != None)
 
@@ -21,3 +33,7 @@ class Stock():
 			self._sides[item] += amount
 		elif item in self._ingredients:
 			self._ingredients[item] += amount
+
+	def decreaseQuantity(self, item, amount):
+		assert(item != None)
+		assert(amount != None)
