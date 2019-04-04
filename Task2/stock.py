@@ -53,5 +53,9 @@ class Stock():
 			self._sides['Fries'] -= 125
 		elif item == 'lrgFries'
 			self._sides['Fries'] -= 150
+		elif item == 'smlNuggets'
+			self._sides['Nuggets'] -= amount
+		elif item == 'lrgNuggets'
+			self._sides['Nuggets'] -= amount
 		elif item in self._ingredients:
 			self._ingredients[item] -= amount
