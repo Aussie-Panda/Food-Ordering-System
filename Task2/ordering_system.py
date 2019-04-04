@@ -1,17 +1,19 @@
 from food import Food
 from order import Order
-# from stock import Stock
+from stock import Stock
 from errors import StockError, QuantityError, checkStock
 from mains import Mains, Burger, Wrap
-
+from drinks import Drinks
+from sides import Sides
 
 class OrderingSystem():
     def __init__(self):
         self._id = 0
-        self._order = []    # a list of Order. order's id should be in increasing order
+        self._order = []            # a list of Order. order's id should be in increasing order
         self._mainsMenu = []        # a list of Mains
         self._drinksMenu = []       # a list of drinks
         self._sidesMenu = []        # a list of sides
+        self._stock = Stock()
 
     def newId(self):
         self._id += 1
@@ -19,25 +21,37 @@ class OrderingSystem():
 
     def displayMenu(self):
         print("--------MENU--------")
-        for item in self.menu:
+        print("  ---Mains Menu---")
+        for item in self.mainsMenu:
             print(item)
+
+        print(" ---Drinks Menu---")
+        for item in self.drinksMenu:
+            print(item)
+
+        print(" ---Sides Menu---")
+        for item in self.sidesMenu:
+            print(item)
+
         print("-------End of Menu-------")
 
-    def getFood(self,name):
+    def getFood(self,name,size=None):
         target = None
-        for i in self.mainsMenu:
-            if i.name == name:
-                target = i
 
-        if taret == None:
+        if size == None:
+            for i in self.mainsMenu:
+                if i.name == name:
+                    target = i
+
+        if size != None:
             for i in self.drinksMenu:
-                if i.name == name:
+                if i.name == name and i.size == size:
                     target = i
 
-        if target == None:
-            for i in self.sidesMenu:
-                if i.name == name:
-                    target = i
+            if target == None:
+                for i in self.sidesMenu:
+                    if i.name == name and i.size == size:
+                        target = i
 
         return target
 
@@ -47,8 +61,8 @@ class OrderingSystem():
         wrap = Wrap(0)
 
         # Drinks(name, price, volume, type)
-        can = Drinks('Can', 3, 375, 'Drinks')
-        bottles = Drinks('Bottles', 5, 600, 'Drinks')
+        can = Drinks('Lemonade(Can)', 3, 375, 'Drinks')
+        bottles = Drinks('Lemonad(Bottles)', 5, 600, 'Drinks')
         smlJuice = Drinks('smlJuice', 2, 250, 'Drinks')
         medJuice = Drinks('medJuice', 4, 450, 'Drinks')
 
@@ -60,9 +74,10 @@ class OrderingSystem():
         lrgFries = Sides('Fries', 3, 'lrg', 'Sides')
 
 
-        self._mainsMenu = [burger, brap]
+        self._mainsMenu = [burger, wrap]
         self._drinksMenu = [can, bottles, smlJuice, medJuice]
         self._sidesMenu = [smlNuggets, lrgNuggets, smlFries, medFries, lrgFries]
+
 
     '''
     Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
@@ -73,19 +88,22 @@ class OrderingSystem():
         
         assert(food != None)
 
-        '''
         try:
-            checkStock(food)
+            checkStock(food, self.stock)
 
         except StockError as er:
             return None, er.errors
-        '''
+        
         newId = self.newId()
         new_order = Order(newId, food, "Pending")
         # print(new_order)
         self.order.append(new_order)
-        
         price = new_order.computeNetPrice()
+
+        # consume food
+        for item in food:
+            self.stock.decreaseQuantity(item.name, food[item])
+
         print(f"Thank you, your order has been made.\nTotal Price: ${price}")
         
         return new_order, []
@@ -117,7 +135,7 @@ class OrderingSystem():
             if value != 0:
                 food[item] = value
         try:
-            checkStock(food)  
+            checkStock(food, self.stock)  
         except StockError as er:
             return None, er.errors
 
@@ -213,7 +231,31 @@ class OrderingSystem():
     def sidesMenu(self):
         return self._sidesMenu
     
+    @property
+    def stock(self):
+        return self._stock
+    
 
 sys = OrderingSystem()
 sys.initMenu()
-sys.displayMenu
+sys.displayMenu()
+print("Fries Storage:", sys.stock.sides['Fries'])
+print("Nuggets Storage:", sys.stock.sides['Nuggets'])
+
+l = {}
+food = sys.getFood("Fries", "lrg")
+if food is not None:
+    l[food] = 3
+food = sys.getFood("Nuggets", "sml")
+if food is not None:
+    l[food] = 4
+
+print("you are ordering: ")
+for i in l:
+    print(i)
+
+order, errors = sys.makeOrder(l)
+if order:
+    sys.sendReceipt(order)
+print("Fries Storage:", sys.stock.sides['Fries'])
+print("Nuggets Storage:", sys.stock.sides['Nuggets'])
