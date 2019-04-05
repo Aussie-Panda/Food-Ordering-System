@@ -35,6 +35,8 @@ class OrderingSystem():
 
         print("-------End of Menu-------")
 
+    # get food instance from menu
+    #size is string indicates in init_menu
     def getFood(self,name,size=None):
         target = None
 
@@ -59,8 +61,8 @@ class OrderingSystem():
 
     def initMenu(self):
         # Mains Burger(numBun, numPat) Wrap(numPat)
-        burger = Burger(0, 0)
-        wrap = Wrap(0)
+        burger = Burger('Burger',5)
+        wrap = Wrap('Wrap',4)
 
         # Drinks(name, price, volume, type)
         can = Drinks('Lemonade(Can)', 3, 375, 'Drinks')

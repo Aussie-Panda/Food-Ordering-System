@@ -32,7 +32,7 @@ class Stock():
 			self._drinks[item] += amount
 		elif item == 'smlFries' or item == 'medFries' or item == 'lrgFries':
 			self._sides['Fries'] += amount
-		elif item == 'smlNuggets' or item == 'lrgNuggets'
+		elif item == 'smlNuggets' or item == 'lrgNuggets':
 			self._sides['Nuggets'] += amount
 		elif item in self._ingredients:
 			self._ingredients[item] += amount
@@ -47,15 +47,15 @@ class Stock():
 			self._drinks[item] -= amount
 		#elif item in self._sides:
 		#	self._sides[item] -= amount
-		elif item == 'smlFries'
+		elif item == 'smlFries':
 			self._sides['Fries'] -= 75
-		elif item == 'medFries'
+		elif item == 'medFries':
 			self._sides['Fries'] -= 125
-		elif item == 'lrgFries'
+		elif item == 'lrgFries':
 			self._sides['Fries'] -= 150
-		elif item == 'smlNuggets'
+		elif item == 'smlNuggets':
 			self._sides['Nuggets'] -= amount
-		elif item == 'lrgNuggets'
+		elif item == 'lrgNuggets':
 			self._sides['Nuggets'] -= amount
 		elif item in self._ingredients:
 			self._ingredients[item] -= amount

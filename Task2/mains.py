@@ -36,12 +36,14 @@ class Mains(Food):
 
 class Burger(Mains):
 
-    def __init__(self,name, price, numBun, numPat):
+    def __init__(self,name, price):
         super().__init__(name,price)
-        self._numBun = numBun
-        self._numPat = numPat
+        self._numBun = 0
+        self._numPat = 0
         self._bunPrice = 1
         self._patPrice = 2
+
+
 
     def computePrice(self):
         burger_price = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
@@ -50,6 +52,12 @@ class Burger(Mains):
             ingridient_price += self.ingredientsOrdered[elem] * self.ingredientsMenu[elem]
         total = ingridient_price + burger_price
         return total
+
+    def addBuns(self, amount):
+        self._numBun += amount
+
+    def addPats(self, amount):
+        self._numPat += amount
 
     def __str__(self): 
         msg = f"Buger: Buns * {self._numBun}, Patties * {self._numPat}.\n  Ingredients: "
@@ -61,9 +69,9 @@ class Burger(Mains):
 
 class Wrap(Mains):
 
-    def __init__(self, name, price, numPat):
+    def __init__(self, name, price):
         super().__init__(name, price)
-        self._numPat = numPat
+        self._numPat = 0
         self._patPrice = 2
 
     def computePrice(self):
@@ -74,6 +82,9 @@ class Wrap(Mains):
         total += ingridient_price
         return total
 
+    def addPats(self, amount):
+        self._numPat += amount
+        
     def __str__(self): 
         msg = f"Wrap: Patties * {self._numPat}.\n  Ingredients: "
         for elem in self.ingredientsOrdered.keys():
@@ -90,7 +101,9 @@ print(m1.price)
 '''
 
 # test burgers and wraps
-# bug = Burger('Burger',5,2,2)
+# bug = Burger('Burger',5)
+# bug.addBuns(2)
+# bug.addPats(2)
 # print(bug._name)
 # print(bug._price)
 # bug.changeIngredients('tomato', 10)
