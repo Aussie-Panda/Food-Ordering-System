@@ -93,81 +93,6 @@ class Stock():
 			elif item in self._ingredients.keys():
 				self._ingredients[item] -= amount
 '''
-
-	def addQuantity(self, item, amount):
-		assert(item != None)
-		assert(amount != None)
-		print('==============')
-		print(type(item))
-
-		if item in self._mains:
-			self._mains[item] += amount
-
-		elif item in self._drinks:
-			if item == 'bottle':
-				self._drinks['bottle'] += 600*amount
-			elif item == 'can':
-				self._drinks['can'] += 375*amount
-			elif item == 'juice' and item.size == 250:
-				self._drinks['juice'] += 250*amount
-			elif item == 'juice' and item.size == 450:
-				self._drinks['juice'] += 450*amount
-
-		elif item in self._sides:
-			if item == 'Fries':
-				if item.size == 'sml':
-					self._sides['Fries'] += 75*amount
-				elif item.size == 'med':
-					self._sides['Fries'] += 125*amount
-				elif item.size == 'lrg':
-					self._sides['Fries'] += 150*amount
-
-			elif item == 'Nuggets':
-				if item.size == 'sml':
-					self._sides['Nuggets'] += 3*amount
-				elif item.size == 'lrg':
-					self._sides['Nuggets'] += 6*amount
-
-
-		elif item in self._ingredients:
-			self._ingredients[item] += amount
-
-	def decreaseQuantity(self, item, amount):
-		assert(item != None)
-		assert(amount != None)
-		if item in self._mains:
-			self._mains[item] -= amount
-
-		elif item in self._drinks:
-			if item == 'bottle':
-				self._drinks['bottle'] -= 600*amount
-			elif item == 'can':
-				self._drinks['can'] -= 375*amount
-			elif item == 'juice' and item.size == 250:
-				self._drinks['juice'] -= 250*amount
-			elif item == 'juice' and item.size == 450:
-				self._drinks['juice'] -= 450*amount
-
-		elif item in self._sides:
-			
-			if item == 'Fries':
-				if item.size == 'sml':
-					self._sides['Fries'] -= 75*amount
-				elif item.size == 'med':
-					self._sides['Fries'] -= 125*amount
-				elif item.size == 'lrg':
-					self._sides['Fries'] -= 150*amount
-
-			elif item == 'Nuggets':
-				if item.size == 'sml':
-					self._sides['Nuggets'] -= 3*amount
-				elif item.size == 'lrg':
-					self._sides['Nuggets'] -= 6*amount
-
-		elif item in self._ingredients:
-			self._ingredients[item] -= amount
-'''
-
 s = Stock()
 s.changeQuantity('add', 'buns', 1)
 s.changeQuantity('add', 'bottle', 1)
@@ -191,3 +116,4 @@ s.changeQuantity('minus', 'juice', 1, 'lrg')
 print(s._mains)
 print(s._drinks)
 print(s._sides)
+'''
