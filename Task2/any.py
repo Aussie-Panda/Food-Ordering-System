@@ -37,8 +37,12 @@ class OrderingSystem():
 
     # get food instance from menu
     #size is string indicates in init_menu
+    #name is a str!!!!!!!
+    #for drinks size is volumn
     def getFood(self,name,size=None):
         target = None
+        
+        # print(type(name))
 
         # Mains dont have size
         if size == None:
@@ -49,14 +53,16 @@ class OrderingSystem():
         # Drinks and Sides have size
         if size != None:
             for i in self.drinksMenu:
-                if i.name == name and i.size == size:
+                # print(i)
+                # print(type(i))
+                if i.name == name and i.volumn == size:
                     target = i
 
             if target == None:
                 for i in self.sidesMenu:
                     if i.name == name and i.size == size:
                         target = i
-
+        
         return target
 
     def initMenu(self):
@@ -64,18 +70,18 @@ class OrderingSystem():
         burger = Burger('Burger',5)
         wrap = Wrap('Wrap',4)
 
-        # Drinks(name, price, volume, type)
-        can = Drinks('Lemonade(Can)', 3, 375, 'Drinks')
-        bottles = Drinks('Lemonad(Bottles)', 5, 600, 'Drinks')
-        smlJuice = Drinks('smlJuice', 2, 250, 'Drinks')
-        medJuice = Drinks('medJuice', 4, 450, 'Drinks')
+        # Drinks(name, price, volume)
+        can = Drinks('Lemonade(Can)', 3, 375)
+        bottles = Drinks('Lemonad(Bottles)', 5, 600)
+        smlJuice = Drinks('smlJuice', 2, 250)
+        medJuice = Drinks('medJuice', 4, 450)
 
         # Sides(self, name, price, size, type)
-        smlNuggets = Sides('Nuggets', 1, 'sml', 'Sides')
-        lrgNuggets = Sides('Nuggets', 2, 'lrg', 'Sides')
-        smlFries = Sides('Fries', 1, 'sml', 'Sides')
-        medFries = Sides('Fries', 2, 'med', 'Sides')
-        lrgFries = Sides('Fries', 3, 'lrg', 'Sides')
+        smlNuggets = Sides('Nuggets', 1, 'sml')
+        lrgNuggets = Sides('Nuggets', 2, 'lrg')
+        smlFries = Sides('Fries', 1, 'sml')
+        medFries = Sides('Fries', 2, 'med')
+        lrgFries = Sides('Fries', 3, 'lrg')
 
 
         self._mainsMenu = [burger, wrap]
@@ -243,25 +249,15 @@ class OrderingSystem():
 sys = OrderingSystem()
 sys.initMenu()
 sys.displayMenu()
-print("Fries Storage:", sys.stock.sides['Fries'])
-print("Nuggets Storage:", sys.stock.sides['Nuggets'])
 
-'''
-l = {}
-food = sys.getFood("Fries", "lrg")
-if food is not None:
-    l[food] = 3
-food = sys.getFood("Nuggets", "sml")
-if food is not None:
-    l[food] = 4
-
-print("you are ordering: ")
-for i in l:
-    print(i)
-
-order, errors = sys.makeOrder(l)
-if order:
-    sys.sendReceipt(order)
-print("Fries Storage:", sys.stock.sides['Fries'])
-print("Nuggets Storage:", sys.stock.sides['Nuggets'])
-'''
+s = sys.stock
+orderedFood = {sys.getFood('nuggets','sml'): 3}
+s = sys.stock
+s.changeQuantity('add', 'buns', 1)
+s.changeQuantity('add', 'bottle', 1)
+s.changeQuantity('add', 'can', 10)
+s.changeQuantity('add', 'fries', 1, 'sml')
+s.changeQuantity('add', 'nuggets', 1, 'lrg')
+s.changeQuantity('add', 'juice', 1, 'lrg')
+order, errors = sys.makeOrder(orderedFood)
+print(order)

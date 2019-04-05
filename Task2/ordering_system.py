@@ -37,6 +37,8 @@ class OrderingSystem():
 
     # get food instance from menu
     #size is string indicates in init_menu
+    #name is a instance!!!!!!!
+    #for drinks size is volumn
     def getFood(self,name,size=None):
         target = None
 
@@ -49,7 +51,7 @@ class OrderingSystem():
         # Drinks and Sides have size
         if size != None:
             for i in self.drinksMenu:
-                if i.name == name and i.size == size:
+                if i.name == name and i.volumn == size:
                     target = i
 
             if target == None:
@@ -64,7 +66,7 @@ class OrderingSystem():
         burger = Burger('Burger',5)
         wrap = Wrap('Wrap',4)
 
-        # Drinks(name, price, volume, type)
+        # Drinks(name, price, volume)
         can = Drinks('Lemonade(Can)', 3, 375)
         bottles = Drinks('Lemonad(Bottles)', 5, 600)
         smlJuice = Drinks('smlJuice', 2, 250)

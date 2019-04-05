@@ -17,13 +17,16 @@ def test_getSides(sys):
 	assert(testSides.name == 'Fries')
 	assert(testSides.size == 'med')
 
-# def test_getMains(sys):
-# 	testMains = sys.getFood('Burger')
-# 	assert(testMains.name == 'Burger')
-# 	assert(testMains.price == 5)
+def test_getMains(sys):
+	testMains = sys.getFood('Burger')
+	assert(testMains.name == 'Burger')
+	assert(testMains.price == 5)
 
-# def test_getDrinks(sys):
-# 	pass
+def test_getDrinks(sys):
+	testDrinks = sys.getFood('Lemonade(Can)', 375)
+	assert(testDrinks.name == 'Lemonade(Can)')
+	assert(testDrinks.price == 3)
+	pass
 
 # def test_make_order_with_exception(sys):
 # 	orderedFood = {sys.getFood('Nuggets','sml'): 3}
@@ -32,20 +35,26 @@ def test_getSides(sys):
 # 	assert(len(errors) != 0)
 # 	assert(order == None)
 
-# def test_make_order(sys):
-# 	orderedFood = {sys.getFood('Nuggets','sml'): 3}
-# 	sys.stock.addQuantity('Nuggets', 100)
-# 	order, errors = sys.makeOrder(orderedFood)
-# 	assert(order != None)
-
-def test_modify_order_with_exception(sys):
+def test_make_order(sys):
 	orderedFood = {sys.getFood('Nuggets','sml'): 3}
-	sys.stock.addQuantity('Nuggets', 0)
-	newOrder, errors = sys.modifyOrder(orderedFood, orderedFood.keys(), 1)
-	assert(len(errors) != 0)
+	s = sys.stock
+	s.changeQuantity('add', 'buns', 1)
+	s.changeQuantity('add', 'bottle', 1)
+	s.changeQuantity('add', 'can', 10)
+	s.changeQuantity('add', 'fries', 1, 'sml')
+	s.changeQuantity('add', 'nuggets', 1, 'lrg')
+	s.changeQuantity('add', 'juice', 1, 'lrg')
+	order, errors = sys.makeOrder(orderedFood)
+	print(order)
+
+# def test_modify_order_with_exception(sys):
+# 	orderedFood = {sys.getFood('Nuggets','sml'): 3}
+# 	sys.stock.addQuantity('Nuggets', 0)
+# 	newOrder, errors = sys.modifyOrder(orderedFood, orderedFood.keys(), 1)
+# 	assert(len(errors) != 0)
 	
-def test_system_and_order(sys):
-	pass
+# def test_system_and_order(sys):
+# 	pass
 	#def getFood(self,name,size=None):
 	# start ordering
 	#fl1 and fl2 are both dic 

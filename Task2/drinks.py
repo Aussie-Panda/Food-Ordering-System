@@ -8,11 +8,11 @@ class Drinks(Food):
 
 
 	@property
-	def volume(self):
+	def volumn(self):
 		return self._volumn
 
-	@volume.setter
-	def volume(self, volumn):
+	@volumn.setter
+	def volumn(self, volumn):
 		self._volumn = volumn
 
 	@property
