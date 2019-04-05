@@ -36,8 +36,8 @@ class Mains(Food):
 
 class Burger(Mains):
 
-    def __init__(self, numBun, numPat):
-        super().__init__('Burger', 5)
+    def __init__(self,name, price, numBun, numPat):
+        super().__init__(name,price)
         self._numBun = numBun
         self._numPat = numPat
         self._bunPrice = 1
@@ -61,8 +61,8 @@ class Burger(Mains):
 
 class Wrap(Mains):
 
-    def __init__(self,numPat):
-        super().__init__('Wrap',4)
+    def __init__(self, name, price, numPat):
+        super().__init__(name, price)
         self._numPat = numPat
         self._patPrice = 2
 
@@ -89,25 +89,25 @@ print(m1.name)
 print(m1.price)
 '''
 
-#test burgers and wraps
-bug = Burger(2,2)
-print(bug._name)
-print(bug._price)
-bug.changeIngredients('tomato', 10)
-bug.changeIngredients('lettuce', 10)
-price = bug.computePrice()
-print(price)
+# test burgers and wraps
+# bug = Burger('Burger',5,2,2)
+# print(bug._name)
+# print(bug._price)
+# bug.changeIngredients('tomato', 10)
+# bug.changeIngredients('lettuce', 10)
+# price = bug.computePrice()
+# print(price)
 
-wrap = Wrap(2)
-wrap.changeIngredients('lettuce', 10)
-price2 = wrap.computePrice()
-print(price2)
+# wrap = Wrap(2)
+# wrap.changeIngredients('lettuce', 10)
+# price2 = wrap.computePrice()
+# print(price2)
 
-print(bug)
-print(wrap)
-print(bug)
-print(bug)
-print(bug)
-print(bug)
+# print(bug)
+# print(wrap)
+# print(bug)
+# print(bug)
+# print(bug)
+# print(bug)
 
 
