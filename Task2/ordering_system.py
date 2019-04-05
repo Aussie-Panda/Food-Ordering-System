@@ -65,17 +65,17 @@ class OrderingSystem():
         wrap = Wrap('Wrap',4)
 
         # Drinks(name, price, volume, type)
-        can = Drinks('Lemonade(Can)', 3, 375, 'Drinks')
-        bottles = Drinks('Lemonad(Bottles)', 5, 600, 'Drinks')
-        smlJuice = Drinks('smlJuice', 2, 250, 'Drinks')
-        medJuice = Drinks('medJuice', 4, 450, 'Drinks')
+        can = Drinks('Lemonade(Can)', 3, 375)
+        bottles = Drinks('Lemonad(Bottles)', 5, 600)
+        smlJuice = Drinks('smlJuice', 2, 250)
+        medJuice = Drinks('medJuice', 4, 450)
 
         # Sides(self, name, price, size, type)
-        smlNuggets = Sides('Nuggets', 1, 'sml', 'Sides')
-        lrgNuggets = Sides('Nuggets', 2, 'lrg', 'Sides')
-        smlFries = Sides('Fries', 1, 'sml', 'Sides')
-        medFries = Sides('Fries', 2, 'med', 'Sides')
-        lrgFries = Sides('Fries', 3, 'lrg', 'Sides')
+        smlNuggets = Sides('Nuggets', 1, 'sml')
+        lrgNuggets = Sides('Nuggets', 2, 'lrg')
+        smlFries = Sides('Fries', 1, 'sml')
+        medFries = Sides('Fries', 2, 'med')
+        lrgFries = Sides('Fries', 3, 'lrg')
 
 
         self._mainsMenu = [burger, wrap]
@@ -120,10 +120,9 @@ class OrderingSystem():
         assert(item != None)
         assert(value != None)
 
-
         # If any invalid value is passed in, raise QuantityError. Errors should be catched outside
         if value < 0:
-            return None,[];
+            return None,[]
             
         # 1. if item is in the order and value is set to 0, delete the item
         # 2. elif item is in the list and value is > 0, overwrite the previous value
