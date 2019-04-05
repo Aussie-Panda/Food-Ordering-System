@@ -29,28 +29,28 @@ class Stock():
 			self._mains[item] += amount
 
 		elif item in self._drinks:
-			if item == 'bottle'
+			if item == 'bottle':
 				self._drinks['bottle'] += 600*amount
-			elif item == 'can'
+			elif item == 'can':
 				self._drinks['can'] += 375*amount
-			elif item == 'juice' and item.size == 250
+			elif item == 'juice' and item.size == 250:
 				self._drinks['juice'] += 250*amount
-			elif item == 'juice' and item.size == 450
+			elif item == 'juice' and item.size == 450:
 				self._drinks['juice'] += 450*amount
 
 		elif item in self._sides:
 			if item == 'Fries':
-				if item.size == 'sml'
+				if item.size == 'sml':
 					self._sides['Fries'] += 75*amount
-				elif item.size == 'med'
+				elif item.size == 'med':
 					self._sides['Fries'] += 125*amount
-				elif item.size == 'lrg'
+				elif item.size == 'lrg':
 					self._sides['Fries'] += 150*amount
 
 			elif item == 'Nuggets':
-				if item.size == 'sml'
+				if item.size == 'sml':
 					self._sides['Nuggets'] += 3*amount
-				elif item.size == 'lrg'
+				elif item.size == 'lrg':
 					self._sides['Nuggets'] += 6*amount
 
 
@@ -65,28 +65,28 @@ class Stock():
 			self._mains[item] -= amount
 
 		elif item in self._drinks:
-			if item == 'bottle'
+			if item == 'bottle':
 				self._drinks['bottle'] -= 600*amount
-			elif item == 'can'
+			elif item == 'can':
 				self._drinks['can'] -= 375*amount
-			elif item == 'juice' and item.size == 250
+			elif item == 'juice' and item.size == 250:
 				self._drinks['juice'] -= 250*amount
-			elif item == 'juice' and item.size == 450
+			elif item == 'juice' and item.size == 450:
 				self._drinks['juice'] -= 450*amount
 
 		elif item in self._sides:
 			if item == 'Fries':
-				if item.size == 'sml'
+				if item.size == 'sml':
 					self._sides['Fries'] -= 75*amount
-				elif item.size == 'med'
+				elif item.size == 'med':
 					self._sides['Fries'] -= 125*amount
-				elif item.size == 'lrg'
+				elif item.size == 'lrg':
 					self._sides['Fries'] -= 150*amount
 
 			elif item == 'Nuggets':
-				if item.size == 'sml'
+				if item.size == 'sml':
 					self._sides['Nuggets'] -= 3*amount
-				elif item.size == 'lrg'
+				elif item.size == 'lrg':
 					self._sides['Nuggets'] -= 6*amount
 
 		elif item in self._ingredients:
