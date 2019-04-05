@@ -1,25 +1,44 @@
-class Mains():  #remeber to put food!!!!!!!!!!!
+from abc import ABC, abstractmethod
 
-    def __init__(self):
+class Any(ABC):
+    def __init__(self, name, price):
+        self._name = name
+        self._price = price
 
-        #list of ingredient that have been ordered
-        self._ingredients = {}
-
-    
-    #getters and setters
     @property
-    def ingredients(self):
-        return self._ingredients
+    def name(self):
+        return self._name
+    
+    @property
+    def price(self):
+        return self._price
+    
+    @abstractmethod
+    def asd(self):
+        pass
 
-    #method can be add or delete ingridient is one of the elem in the list
-    def changeIngredients(self, ingredient, amount = None):
-        #check inputs
-        assert(ingredient != None)
-        assert(amount != None)
-        
-        self.ingredients[ingredient] = amount
-        
+    '''
+    def __str__(self):
+        return f"name: {self.name}, price: ${self.price}"
+    '''
 
-m1 = Mains()
-m1.changeIngredients('shit',99)
-print(m1.ingredients)
+class thing(Any):
+    def __init(self, name, price):
+        super().__init__(name,price)
+
+    def asd(self):
+        pass
+
+t1 = thing('haha',1)
+t2 = thing('hahaha', 2)
+t3 = thing('hahahaha', 3)
+
+l = [t1, t2, t3]
+l2 = [t1, t3]
+
+print(l[0]) # <__main__.thing object at 0x1013de6a0>
+print(l2[0]) # <__main__.thing object at 0x1013de6a0>
+
+
+
+
