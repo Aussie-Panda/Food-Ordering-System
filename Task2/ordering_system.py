@@ -38,11 +38,13 @@ class OrderingSystem():
     def getFood(self,name,size=None):
         target = None
 
+        # Mains dont have size
         if size == None:
             for i in self.mainsMenu:
                 if i.name == name:
                     target = i
 
+        # Drinks and Sides have size
         if size != None:
             for i in self.drinksMenu:
                 if i.name == name and i.size == size:
@@ -235,6 +237,7 @@ class OrderingSystem():
     def stock(self):
         return self._stock
     
+'''
 
 sys = OrderingSystem()
 sys.initMenu()
@@ -259,3 +262,4 @@ if order:
     sys.sendReceipt(order)
 print("Fries Storage:", sys.stock.sides['Fries'])
 print("Nuggets Storage:", sys.stock.sides['Nuggets'])
+'''
