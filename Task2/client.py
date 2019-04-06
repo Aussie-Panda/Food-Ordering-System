@@ -1,7 +1,6 @@
 from ordering_system import OrderingSystem
+from order import Order
 from stock import Stock
-
-from sides import Sides
 
 system = OrderingSystem()
 system.initMenu()
@@ -15,13 +14,13 @@ for category in [system.stock.mains, system.stock.drinks, system.stock.sides, sy
 		else:
 			category[item] = 10
 
-print("\n\n~~~~~Print Menu~~~~~")
+print("~~~~~Print Menu~~~~~")
 system.displayMenu()
 
 print("\n\n~~~~~Print Stock~~~~~")
 print(system.stock)
 
-# food list example
+# customer order food
 fl1 =  {system.getFood('Nuggets','sml'): 3, system.getFood('Fries','lrg'): 4, system.getFood('Fries','sml'): 8}
 fl2 = {system.getFood('Fries','med'): 4, system.getFood('Fries', 'sml'): 8, system.getFood('Lemonade','Cans'): 9}
 
@@ -41,3 +40,19 @@ print("\n\n~~~~~~~~Print All Orders~~~~~~~~")
 for o in system.order:
 	print(o)
 	print('\n')
+
+# staff serving order
+while (len(system.order) > 0):
+	curr_order = system.getNextOrder('Pending')
+	print(f"\n\n~~~~~~~~~~Now Serving Order {curr_order.orderId}~~~~~~~~")
+
+	curr_order.updateOrder('Preparing')
+	print(curr_order)
+	print("\n~~~~~~~~Order is Ready~~~~~~~~")
+	curr_order.updateOrder('Ready')
+	print(curr_order)
+	print("\n~~~~~~~~Order Picked Up~~~~~~~")
+	curr_order.updateOrder('Picked Up')
+	system.deleteOrder(None, curr_order.orderId)
+	print(f"Order {curr_order.orderId} has been picked up.")
+	
