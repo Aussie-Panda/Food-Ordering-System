@@ -1,4 +1,5 @@
 from food import Food
+from mains import Mains, Burger, Wrap
 
 class Order():
     def __init__(self, orderId, food, orderStatus = "Not Submitted"):
@@ -6,11 +7,17 @@ class Order():
         self._orderedItem = food        # a dictionary, key=Food, value=int
         self._orderStatus = orderStatus # string
 
-
-    def getFood(self,name):
+    # get a particular food from the order
+    # name: str, size = str
+    # return value: the instance or Food (if found)/ None(if not found)
+    def getFood(self,name,size=None):
         for i in self.orderedItem:
-            if i.name == name:
-                return i
+            if isinstance(item, Mains):
+                if i.name == name:
+                    return i
+            else:
+                if i.name == name and i.size == size:
+                    return i
         return None
 
     # compute total price of the order
@@ -20,9 +27,7 @@ class Order():
         thisPrice = 0
         for item in self.orderedItem.keys():
 
-            if item.name == "Burger":
-                thisPrice = item.computePrice()
-            elif item.name == "Wrap":
+            if isinstance(item, Mains):
                 thisPrice = item.computePrice()
             else:
                 thisPrice = item.price

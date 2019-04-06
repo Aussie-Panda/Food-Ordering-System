@@ -1,9 +1,9 @@
 from food import Food
 
 class Drinks(Food):
-	def __init__(self, name, price, volumn):
+	def __init__(self, name, price, size, volumn):
 		super().__init__(name, price)
-		self._price = price
+		self._size = size
 		self._volumn = volumn
 
 
@@ -11,21 +11,22 @@ class Drinks(Food):
 	def volumn(self):
 		return self._volumn
 
-	@volumn.setter
-	def volumn(self, volumn):
-		self._volumn = volumn
-
 	@property
-	def price(self):
-		return self._price
-
+	def size(self):
+		return self._size
+	
 
 	def computePrice(self):
 		pass
 
-can = Drinks('Lemonade(Can)', 3, 375)
-bottles = Drinks('Lemonad(Bottles)', 5, 600)
-smlJuice = Drinks('smlJuice', 2, 250)
-medJuice = Drinks('medJuice', 4, 450)
+	# output example: Lemonade(Bottles): $3
+	def __str__(self):
+		return f"{self.name}({self.size}:{self.volumn}): ${self.price}"
+'''
+can = Drinks('Cola', 3, "Cans" 375)
+bottles = Drinks('Cola', 5, "Bottles", 600)
+smlJuice = Drinks('Orange_Juice', 2, 'sml', 250)
+medJuice = Drinks('Orange_Juice', 4, 'med', 450)
 
 print(can.name)
+'''

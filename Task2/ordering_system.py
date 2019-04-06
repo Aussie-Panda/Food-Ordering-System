@@ -35,10 +35,9 @@ class OrderingSystem():
 
         print("-------End of Menu-------")
 
-    # get food instance from menu
-    #size is string indicates in init_menu
-    #name is a instance!!!!!!!
-    #for drinks size is volumn
+    # pass in str and get food instance from menu
+    # size: str (sml, med, lrg, Bottles, Cans)
+    # name: str
     def getFood(self,name,size=None):
         target = None
 
@@ -50,12 +49,8 @@ class OrderingSystem():
 
         # Drinks and Sides have size
         if size != None:
-            for i in self.drinksMenu:
-                if i.name == name and i.volumn == size:
-                    target = i
-
-            if target == None:
-                for i in self.sidesMenu:
+            for menu in [self.drinksMenu,self.sidesMenu]:
+                for i in menu:
                     if i.name == name and i.size == size:
                         target = i
 
@@ -66,18 +61,18 @@ class OrderingSystem():
         burger = Burger('Burger',5)
         wrap = Wrap('Wrap',4)
 
-        # Drinks(name, price, volume)
-        can = Drinks('Lemonade(Can)', 3, 375)
-        bottles = Drinks('Lemonad(Bottles)', 5, 600)
-        smlJuice = Drinks('smlJuice', 2, 250)
-        medJuice = Drinks('medJuice', 4, 450)
+        # Drinks(name, price, size, volumn)
+        can = Drinks('Lemonade', 3, 'Cans', 375)
+        bottles = Drinks('Lemonade', 5, 'Bottles', 600)
+        smlJuice = Drinks('Orange_Juice', 2, 'sml',250)
+        medJuice = Drinks('Orange_Juice', 4, 'med', 450)
 
         # Sides(self, name, price, size, type)
-        smlNuggets = Sides('Nuggets', 1, 'sml')
-        lrgNuggets = Sides('Nuggets', 2, 'lrg')
-        smlFries = Sides('Fries', 1, 'sml')
-        medFries = Sides('Fries', 2, 'med')
-        lrgFries = Sides('Fries', 3, 'lrg')
+        smlNuggets = Sides('Nuggets', 1, 'sml', 3)
+        lrgNuggets = Sides('Nuggets', 2, 'lrg', 6)
+        smlFries = Sides('Fries', 1, 'sml', 20)
+        medFries = Sides('Fries', 2, 'med', 40)
+        lrgFries = Sides('Fries', 3, 'lrg', 60)
 
 
         self._mainsMenu = [burger, wrap]
@@ -88,6 +83,7 @@ class OrderingSystem():
     '''
     Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
     append it to order list and set status as "Pending"
+    food: a dictionary with key: instance of Food, value: int
     return value: order, [](if no StockError)/None, error list(if StockError)
     '''
     def makeOrder(self, food = None):
@@ -108,21 +104,38 @@ class OrderingSystem():
 
         # consume food
         for item in food:
-            self.stock.decreaseQuantity(item.name, food[item])
+            self.stock.decreaseQuantity(item, food[item])
+
+            # for Mains, should further find out how many buns/patties/ingradients are consumed
+            if isinstance(item, Mains):
+                for i in item.ingredientsOrdered.keys():
+                    self.stock.decreaseQuantity(i, item.ingredientsOrdered[i]) 
+
+                if isinstance(item, Burger):
+                    self.stock.decreaseQuantity('buns', item.numBun)
+                    self.stock.decreaseQuantity('patties', item.numPat)
+                elif isinstance(item, Wrap):
+                    self.stock.decreaseQuantity('patties', item.numPat)
+
 
         print(f"Thank you, your order has been made.\nTotal Price: ${price}")
         
         return new_order, []
             
 
-
-    # Funciton to modify the tmp order
+    '''
+    Funciton to modify the tmp order
+    food: a dictionary with key: instance of Food, value: int;
+    item: instance of food;
+    value: int.
+    return value:None
+    '''
     def modifyOrder(self, food=None, item=None, value=None):
         assert(food != None)
         assert(item != None)
         assert(value != None)
 
-        # If any invalid value is passed in, raise QuantityError. Errors should be catched outside
+        # If any invalid value is passed in, return None and empty error list
         if value < 0:
             return None,[]
             
@@ -139,45 +152,23 @@ class OrderingSystem():
             # if customer enter value 0, do nothing
             if value != 0:
                 food[item] = value
-        try:
-            checkStock(food, self.stock)  
-        except StockError as er:
-            return None, er.errors
-
-
-        return food, []           
+           
 
     '''
-    Ask for customer if they would like to enter email address and then send a receipt
-    return value: None (void function)
+    Generate receipt of an order
+    order: an instance of Order
+    return value: string
     '''
-    def sendReceipt(self,order):
+    def printReceipt(self,order):
         assert(order != None)
-        send = 'n'
-        # send = input("Would you like to send a receit? (y/n): ")
-        '''
-        price = order.computeNetPrice
-        receipt = f'------Receipt-----\nDear customer,\nYour order has been confirmed.\nYour order ID is: {order.orderId}\nYour items are: \n{food}\nTotal Price: ${price}\nThank you for ordering!\n--------End of Receipt-------'
-        '''
+        
         receipt = f'---------Receipt--------\n{order}\n--------End of Receipt--------'
-        if send == 'y':
-            email = ""
-            email += input("Please enter your email: ")
-            
-            while not email:
-                email += input("Please enter your email: ")
-
-            
-            print("Your receipt has been sent to email " + email)
-            print(receipt)
-
-
-        else:
-            print(receipt)
+        return receipt
 
 
     '''
     Get next order either by status or particular id.
+    status: string, id: int
     return value: order (if found)/None(if not found)
     '''
     def getNextOrder(self, status = None, id = None):
@@ -196,6 +187,7 @@ class OrderingSystem():
 
     '''
     Delete the next order that has requesting status or particular id
+    status: string, id: int
     return value: order (if found)/None(if not found)
     '''
     def deleteOrder(self, status = None, id = None):

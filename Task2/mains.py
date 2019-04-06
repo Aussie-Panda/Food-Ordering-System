@@ -43,8 +43,6 @@ class Burger(Mains):
         self._bunPrice = 1
         self._patPrice = 2
 
-
-
     def computePrice(self):
         burger_price = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
         ingridient_price = 0
@@ -58,6 +56,15 @@ class Burger(Mains):
 
     def addPats(self, amount):
         self._numPat += amount
+
+    @property
+    def numBun(self):
+        return self._numBun
+     
+    @property
+    def numPat(self):
+        return self._numPat
+        
 
     def __str__(self): 
         msg = f"Buger: Buns * {self._numBun}, Patties * {self._numPat}.\n  Ingredients: "
@@ -85,6 +92,10 @@ class Wrap(Mains):
     def addPats(self, amount):
         self._numPat += amount
         
+    @property
+    def numPat(self):
+        return self._numPat
+    
     def __str__(self): 
         msg = f"Wrap: Patties * {self._numPat}.\n  Ingredients: "
         for elem in self.ingredientsOrdered.keys():
