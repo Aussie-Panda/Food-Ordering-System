@@ -140,6 +140,113 @@ def test_modify_order(sys):
 	assert(not errors)
 	assert(order.computeNetPrice() == 9)
 
+def test_getNextOrder_if_id_not_found(sys):
+	orderedFood = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	order, errors = sys.makeOrder(orderedFood)
+	testGet = sys.getNextOrder(None,2)
+	assert(testGet == None)
+
+def test_getNextOrder_if_id_found(sys):
+	orderedFood = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	order, errors = sys.makeOrder(orderedFood)
+	testGet = sys.getNextOrder(None,1)
+	assert(testGet == order)
+
+def test_getNextOrder_if_stat_not_found(sys):
+	orderedFood = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	order, errors = sys.makeOrder(orderedFood)
+	testGet = sys.getNextOrder('something')
+	assert(testGet == None)
+
+def test_getNextOrder_if_stat_found(sys):
+	orderedFood = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	order, errors = sys.makeOrder(orderedFood)
+	testGet = sys.getNextOrder('Pending')
+	assert(testGet == order)
+
+def test_getNextOrder_with_multiple_orders(sys):
+	orderedFood1 = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	burger = sys.getFood('Burger')
+	burger.addBuns(3)
+	burger.addPats(2)
+	burger.changeIngredients('tomato', 2)
+	burger.changeIngredients('cheddar_cheese', 3)
+	orderedFood2 = {burger: 1, sys.getFood('Orange_Juice','sml'): 2}
+	order, errors = sys.makeOrder(orderedFood1)
+	order2, errors = sys.makeOrder(orderedFood2)
+	testGet = sys.getNextOrder('Pending')
+	assert(testGet == order)
+	order.updateOrder('someStat')
+	testGet = sys.getNextOrder('someStat')
+	assert(testGet == order)
+	testGet = sys.getNextOrder('Pending')
+	assert(testGet == order2)
+	testGet = sys.getNextOrder(None,2)
+	assert(testGet == order2)
+	testGet = sys.getNextOrder(None,100)
+	assert(testGet == None)
+
+def test_deleteOrder_if_id_not_found(sys):
+	wrap = sys.getFood('Wrap')
+	wrap.addPats(3)
+	wrap.changeIngredients('tomato_sauce', 3)
+	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	order, errors = sys.makeOrder(orderedFood)
+	testDelete = sys.deleteOrder(None, 3)
+	assert(testDelete == None)
+	assert(len(sys.order) == 1)
+
+def test_deleteOrder_if_id_found(sys):
+	wrap = sys.getFood('Wrap')
+	wrap.addPats(3)
+	wrap.changeIngredients('tomato_sauce', 3)
+	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	order, errors = sys.makeOrder(orderedFood)
+	testDelete = sys.deleteOrder(None, 1)
+	assert(testDelete == order)
+	assert(len(sys.order) == 0)
+
+def test_deleteOrder_if_stat_not_found(sys):
+	wrap = sys.getFood('Wrap')
+	wrap.addPats(3)
+	wrap.changeIngredients('tomato_sauce', 3)
+	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	order, errors = sys.makeOrder(orderedFood)
+	testDelete = sys.deleteOrder('someStat')
+	assert(testDelete == None)
+	assert(len(sys.order) == 1)
+
+def test_deleteOrder_if_stat_found(sys):
+	wrap = sys.getFood('Wrap')
+	wrap.addPats(3)
+	wrap.changeIngredients('tomato_sauce', 3)
+	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	order, errors = sys.makeOrder(orderedFood)
+	testDelete = sys.deleteOrder('Pending')
+	assert(testDelete == order)
+	assert(len(sys.order) == 0)
+
+def test_delete_multiple_orders(sys):
+	orderedFood1 = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Lemonade', 'Cans'): 3}
+	burger = sys.getFood('Burger')
+	burger.addBuns(3)
+	burger.addPats(2)
+	burger.changeIngredients('tomato', 2)
+	burger.changeIngredients('cheddar_cheese', 3)
+	orderedFood2 = {burger: 1, sys.getFood('Orange_Juice','sml'): 2}
+	order, errors = sys.makeOrder(orderedFood1)
+	order2, errors = sys.makeOrder(orderedFood2)
+	testDelete = sys.deleteOrder('something')
+	assert(testDelete == None)
+	assert(len(sys.order) == 2)
+	order.updateOrder('someStat')
+	testDelete = sys.deleteOrder('someStat')
+	assert(testDelete == order)
+	assert(len(sys.order) == 1)
+	testDelete = sys.deleteOrder(None,2)
+	assert(testDelete == order2)
+	assert(len(sys.order) == 0)
+
 # def test_modify_order_with_exception(sys):
 # 	orderedFood = {sys.getFood('Nuggets','sml'): 3}
 # 	sys.stock.addQuantity('Nuggets', 0)
