@@ -1,7 +1,7 @@
 from food import Food
 from order import Order
 from stock import Stock
-from errors import StockError, QuantityError, checkStock
+from errors import StockError, bun_error, check_numBuns_error, checkStock
 from mains import Mains, Burger, Wrap
 from drinks import Drinks
 from sides import Sides

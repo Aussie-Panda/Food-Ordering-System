@@ -1,7 +1,7 @@
 from food import Food
 from order import Order
 from stock import Stock
-from errors import StockError, QuantityError, checkStock
+from errors import StockError, bun_error, check_numBuns_error, checkStock
 from mains import Mains, Burger, Wrap
 from drinks import Drinks
 from sides import Sides
@@ -232,29 +232,4 @@ class OrderingSystem():
     def stock(self):
         return self._stock
     
-'''
 
-sys = OrderingSystem()
-sys.initMenu()
-sys.displayMenu()
-print("Fries Storage:", sys.stock.sides['Fries'])
-print("Nuggets Storage:", sys.stock.sides['Nuggets'])
-
-l = {}
-food = sys.getFood("Fries", "lrg")
-if food is not None:
-    l[food] = 3
-food = sys.getFood("Nuggets", "sml")
-if food is not None:
-    l[food] = 4
-
-print("you are ordering: ")
-for i in l:
-    print(i)
-
-order, errors = sys.makeOrder(l)
-if order:
-    sys.sendReceipt(order)
-print("Fries Storage:", sys.stock.sides['Fries'])
-print("Nuggets Storage:", sys.stock.sides['Nuggets'])
-'''

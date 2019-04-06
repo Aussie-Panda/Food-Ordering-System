@@ -1,4 +1,3 @@
-
 #created by Yanning Cao from memberless Team
 #mains class
 from food import Food
@@ -102,36 +101,5 @@ class Wrap(Mains):
             msg += f"{elem} * {self.ingredientsOrdered[elem]}, "
 
         return msg
-
-'''
-# For simple testing
-m1 = Mains('shit',9999999999)
-m1.changeIngredients('shit',99)
-print(m1.name)
-print(m1.price)
-'''
-
-# test burgers and wraps
-# bug = Burger('Burger',5)
-# bug.addBuns(2)
-# bug.addPats(2)
-# print(bug._name)
-# print(bug._price)
-# bug.changeIngredients('tomato', 10)
-# bug.changeIngredients('lettuce', 10)
-# price = bug.computePrice()
-# print(price)
-
-# wrap = Wrap(2)
-# wrap.changeIngredients('lettuce', 10)
-# price2 = wrap.computePrice()
-# print(price2)
-
-# print(bug)
-# print(wrap)
-# print(bug)
-# print(bug)
-# print(bug)
-# print(bug)
 
 

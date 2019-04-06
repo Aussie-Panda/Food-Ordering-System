@@ -86,31 +86,3 @@ class Stock():
                 msg += f"{item}: {category[item]}; "
             msg += "\n"
         return msg
-
-            
-
-'''
-s = Stock()
-s.changeQuantity('add', 'buns', 1)
-s.changeQuantity('add', 'bottle', 1)
-s.changeQuantity('add', 'can', 10)
-s.changeQuantity('add', 'fries', 1, 'sml')
-s.changeQuantity('add', 'nuggets', 1, 'lrg')
-s.changeQuantity('add', 'juice', 1, 'lrg')
-
-
-
-print(s._mains)
-print(s._drinks)
-print(s._sides)
-print('======after minus=========')
-s.changeQuantity('minus', 'buns', 1)
-s.changeQuantity('minus', 'bottle', 1)
-s.changeQuantity('minus', 'can', 10)
-s.changeQuantity('minus', 'fries', 1, 'sml')
-s.changeQuantity('minus', 'nuggets', 1, 'lrg')
-s.changeQuantity('minus', 'juice', 1, 'lrg')
-print(s._mains)
-print(s._drinks)
-print(s._sides)
-'''

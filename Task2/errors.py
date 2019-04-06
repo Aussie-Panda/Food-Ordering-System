@@ -18,14 +18,19 @@ class StockError(Exception):
 	def errors(self):
 		return self._errors
 
+class bun_error(Exception):
 
-class QuantityError(Exception):
-	def __init__(self,item):
-		self._item = item
+	def __init__(self, errors, msg=None):
+	        if msg is None:
+	            msg = "Error occur in food system: %s"%(', '.join(errors.keys()))
+	        super().__init__(msg)
+	        self.errors = errors
 
-		def __str__(self):
-			return f"Item {self._item} has invalid Quantity!"
+def check_numBuns_error(numBuns):
+    errors = {}
 
+    if (numBuns > 4):
+        errors['numBuns'] = 'Please input no more than 4 buns.'
 
 '''
 Check if a dictionary of food is out of stock
