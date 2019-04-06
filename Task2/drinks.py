@@ -21,7 +21,7 @@ class Drinks(Food):
 
 	# output example: Lemonade(Bottles): $3
 	def __str__(self):
-		return f"{self.name}({self.size}:{self.volumn}): ${self.price}"
+		return f"{self.name}({self.size}:{self.volumn}ml): ${self.price}"
 '''
 can = Drinks('Cola', 3, "Cans" 375)
 bottles = Drinks('Cola', 5, "Bottles", 600)
