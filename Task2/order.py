@@ -12,7 +12,7 @@ class Order():
     # return value: the instance or Food (if found)/ None(if not found)
     def getFood(self,name,size=None):
         for i in self.orderedItem:
-            if isinstance(item, Mains):
+            if isinstance(i, Mains):
                 if i.name == name:
                     return i
             else:
