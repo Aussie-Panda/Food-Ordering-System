@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<h1>Welcome to Memberless Restaurant!!( ͡° ͜ʖ ͡°)</h1>
+What would you like to do?
+<form method="POST">
+    <input type="submit" name="checkStatus" value="Check Status">
+    <input type="submit" name="continueOrder" value="Continue my order">
+    <input type="submit" name="newOrder" value="Make New Order">
+</form>
+
+<form method="POST">
+    <br/><br/>
+    {% if checkStatus == True%}
+        Order ID: <input name='id' placeholder='Your order ID'><br />
+        <input type="submit" name="checStatus" value="Check My Order!">
+
+    {% elif continueOrder == True %}
+        Order ID: <input name='id' placeholder='Your order ID'><br />
+        <input type="submit" name="contOrder" value="Continue My Order!">
+        
+    {% endif %}
+</form>
+
+
+{% endblock %}
