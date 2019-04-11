@@ -2,9 +2,9 @@ from src.food import Food
 from src.mains import Mains, Burger, Wrap
 
 class Order():
-    def __init__(self, orderId, food, orderStatus = "Not Submitted"):
-        self._orderId = orderId         # int
-        self._orderedItem = food        # a dictionary, key=Food, value=int
+    def __init__(self, orderId, orderStatus = "Not Submitted"):
+        self._orderId = int(orderId)         # int
+        self._orderedItem = {}          # a dictionary, key=Food, value=int
         self._orderStatus = orderStatus # string
 
     # get a particular food from the order
@@ -39,10 +39,10 @@ class Order():
         return totalPrice
 
 
-
     # update orderStatus
     def updateOrder(self, status):
         self._orderStatus = status
+        
         
     def __str__(self):
         price = self.computeNetPrice()

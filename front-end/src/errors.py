@@ -18,6 +18,14 @@ class StockError(Exception):
 	def errors(self):
 		return self._errors
 
+class SearchError(Exception):
+    def __init__(self, obj):
+        self._obj=obj
+    
+    def __str__(self):
+        msg = 'Sorry, ' + self._obj + ' is not found. Please try again.'
+        return msg
+    
 class bun_error(Exception):
 
 	def __init__(self, errors, msg=None):

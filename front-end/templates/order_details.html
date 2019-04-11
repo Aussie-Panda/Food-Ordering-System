@@ -1,0 +1,32 @@
+<!-- 
+    This page display details of a specific order. By differentiate
+    the order status, user can either continue ordering or refresh
+    order status andsending email receipt.
+ -->
+ 
+{% extends 'base.html' %}
+{% block body %}
+
+<div>
+    <h1>Welcome back!</h1>
+    <h3>Your Order Detail:</h3>
+    {{msg}}
+</div>
+<form method="POST">
+    <br/>
+    {% if status == "Not Submitted" %}
+        <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
+    {% elif status == "Pending" or status == "Ready" or status == "Picked up" %}
+        <input type="submit" name="refresh" value="Refresh"><br/><br/>
+        Would you like us to email you the receipt?<br/>
+        If yes, please insert your email: <input name="email" placeholder="example@abc.com"/><br/>
+        <br/>
+        <input type="submit" name="sendEmail" value="Send Email"/><br/><br/>
+        {% if send == True%}
+            Your receipt has been sent to {{email}}. Thank you for ordering!<br/>
+        {% endif %}
+    {% endif %}
+    <br/>
+</form>
+
+{% endblock %}

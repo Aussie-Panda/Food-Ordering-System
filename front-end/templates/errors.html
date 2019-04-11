@@ -1,0 +1,32 @@
+<!-- 
+    This page will display when error occur. The error message will 
+    be passed in form app.py and displayed here with a cute whatever
+    creature.
+ -->
+
+{% extends 'base.html' %}
+{% block body %}
+<h1>Uh Oh, there is an error.</h1>
+<h2>{{msg}}</h2>
+<div>            
+━┓┓　　　┏┓<br/>
+┏┛┻━━━┛┻┓<br />
+┃　　　　　　　┃ 　<br />
+┃　　　━　　　┃<br />
+┃　┳┛　┗┳　┃<br />
+┃　　　　　　　┃<br />
+┃　　　┻　　　┃<br />
+┃　　　　　　　┃<br />
+┗━┓　　　┏━┛<br />
+　　┃　　　┃<br />　
+　　┃　　　┃<br />
+　　┃　　　┗━━━┓<br />
+　　┃　　　　　　　┣┓<br />
+　　┃　　　　　　　┏┛<br />
+　　┗┓┓┏━┳┓┏┛<br />
+　　　┃┫┫　┃┫┫<br />
+　　　┗┻┛　┗┻┛<br />
+</div>
+
+　　
+{% endblock %}

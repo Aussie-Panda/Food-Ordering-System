@@ -1,7 +1,7 @@
 from src.food import Food
 from src.order import Order
 from src.stock import Stock
-from src.errors import StockError, bun_error, check_numBuns_error, checkStock
+from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
@@ -57,35 +57,39 @@ class OrderingSystem():
         return target
 
 
-
     '''
-    Check if item in food is out of stock. If yes, raise StockErrors; if no, create new order instance, 
-    append it to order list and set status as "Pending"
-    food: a dictionary with key: instance of Food, value: int
-    return value: Order or None
-
-    Modified: don't need food, only need to create a new order and use modifyorder to add
-    food
+    make a new order once the customer enter the menu page.
     '''
     def makeOrder(self):
         
-        emptyFood = checkStock(food, self.stock)
+        newId = self.newId()
+        new_order = Order(newId, "Not Submitted")
+        # print(new_order)
+        self.order.append(new_order)
+
+        return new_order
+    
+    '''
+    Check if item in food is out of stock. If yes, raise StockErrors; if no, append it to order list and set status as "Pending"
+    order: an Order instance
+    return value: Order or None
+
+    Modified: don't need food, only need to create a new order and use modifyorder to add food
+    '''
+    def confirmOrder(self, order):
+        
+        emptyFood = checkStock(order.orderedItem, self.stock)
         if emptyFood:
             raise StockError(emptyFood)
         
         else:
-            newId = self.newId()
-            new_order = Order(newId, food, "Pending")
-            # print(new_order)
-            self.order.append(new_order)
-            price = new_order.computeNetPrice()
-
+            order.updateOrder("Pending")
+            # print(order)
+            price = order.computeNetPrice()
             # consume food
-            self.stock.consumeFood(new_order.orderedItem)
-            print(f"Thank you, your order has been made.\nTotal Price: ${price}")
+            self.stock.consumeFood(order.orderedItem)
             
-            return new_order
-            
+            return order
     
     '''
     A function to add/modify the quantity of the food into the order list
@@ -98,14 +102,6 @@ class OrderingSystem():
         order = self.getNextOrder(None,id)
         for food in itemList:
             food = self.getFood(food)
-
-
-
-
-
-
-
-
 
     '''
     Generate receipt of an order
@@ -125,18 +121,22 @@ class OrderingSystem():
     return value: order (if found)/None(if not found)
     '''
     def getNextOrder(self, status = None, id = None):
-
+        target = None
         if id is None:
             for i in self.order:
                 if i.orderStatus == status:
-                    return i
+                    target = i
 
         elif id is not None:
+            id = int(id)
             for i in self.order:
                 if i.orderId == id:
-                    return i
+                    target = i
 
-        return None     # if no order matches the requesting status or id
+        if target is None:
+            raise SearchError('Order')
+        else:
+            return target     # if no order matches the requesting status or id
 
     '''
     Delete the next order that has requesting status or particular id
@@ -168,7 +168,6 @@ class OrderingSystem():
     def order(self):
         return self._order
 
-    
     @property
     def mainsMenu(self):
         return self._mainsMenu
