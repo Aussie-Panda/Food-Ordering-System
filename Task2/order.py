@@ -12,7 +12,7 @@ class Order():
     # return value: the instance or Food (if found)/ None(if not found)
     def getFood(self,name,size=None):
         for i in self.orderedItem:
-            if isinstance(item, Mains):
+            if isinstance(i, Mains):
                 if i.name == name:
                     return i
             else:
@@ -55,6 +55,37 @@ class Order():
         msg += f"Order status: {self._orderStatus}\n"
         msg += f"Total Price: ${price}"
         return msg
+
+        
+    '''
+    Method to modify the order
+    food: a dictionary with key: instance of Food, value: int;
+    item: instance of food;
+    value: int.
+    return value:None
+    '''
+    def modify(self, item=None, value=None):
+        assert(item != None)
+        assert(value != None)
+        
+        # If any invalid value is passed in, return None and empty error list
+        if value < 0:
+            return None,[]
+            
+        # 1. if item is in the order and value is set to 0, delete the item
+        # 2. elif item is in the list and value is > 0, overwrite the previous value
+        elif item in self.orderedItem:
+            if value == 0:
+                self.orderedItem.pop(item)
+            else:
+                self.orderedItem[item] = value
+
+        # 3. elif item is not in the list, add item with value
+        elif item not in self.orderedItem:
+            # if customer enter value 0, do nothing
+            if value != 0:
+                self.orderedItem[item] = value
+        
 
     ''' 
     Properties

@@ -81,78 +81,53 @@ class OrderingSystem():
 
 
     '''
-    Check if item in food is out of stock. If yes, return None and errors; if no, create new order instance, 
+    Check if item in food is out of stock. If yes, raise StockErrors; if no, create new order instance, 
     append it to order list and set status as "Pending"
     food: a dictionary with key: instance of Food, value: int
-    return value: order, [](if no StockError)/None, error list(if StockError)
+    return value: Order or None
+
+    Modified: don't need food, only need to create a new order and use modifyorder to add
+    food
     '''
-    def makeOrder(self, food = None):
+    def makeOrder(self):
         
-        assert(food != None)
-
-        try:
-            checkStock(food, self.stock)
-
-        except StockError as er:
-            return None, er.errors
+        emptyFood = checkStock(food, self.stock)
+        if emptyFood:
+            raise StockError(emptyFood)
         
-        newId = self.newId()
-        new_order = Order(newId, food, "Pending")
-        # print(new_order)
-        self.order.append(new_order)
-        price = new_order.computeNetPrice()
+        else:
+            newId = self.newId()
+            new_order = Order(newId, food, "Pending")
+            # print(new_order)
+            self.order.append(new_order)
+            price = new_order.computeNetPrice()
 
-        # consume food
-        for item in food:
-            self.stock.decreaseQuantity(item, food[item])
-
-            # for Mains, should further find out how many buns/patties/ingradients are consumed
-            if isinstance(item, Mains):
-                for i in item.ingredientsOrdered.keys():
-                    self.stock.decreaseQuantity(i, item.ingredientsOrdered[i]) 
-
-                if isinstance(item, Burger):
-                    self.stock.decreaseQuantity('buns', item.numBun)
-                    self.stock.decreaseQuantity('patties', item.numPat)
-                elif isinstance(item, Wrap):
-                    self.stock.decreaseQuantity('patties', item.numPat)
-
-
-        print(f"Thank you, your order has been made.\nTotal Price: ${price}")
-        
-        return new_order, []
+            # consume food
+            self.stock.consumeFood(new_order.orderedItem)
+            print(f"Thank you, your order has been made.\nTotal Price: ${price}")
             
-
-    '''
-    Funciton to modify the tmp order
-    food: a dictionary with key: instance of Food, value: int;
-    item: instance of food;
-    value: int.
-    return value:None
-    '''
-    def modifyOrder(self, food=None, item=None, value=None):
-        assert(food != None)
-        assert(item != None)
-        assert(value != None)
-
-        # If any invalid value is passed in, return None and empty error list
-        if value < 0:
-            return None,[]
+            return new_order
             
-        # 1. if item is in the order and value is set to 0, delete the item
-        # 2. elif item is in the list and value is > 0, overwrite the previous value
-        elif item in food:
-            if value == 0:
-                food.pop(item)
-            else:
-                food[item] = value
+    
+    '''
+    A function to add/modify the quantity of the food into the order list
+    id is a int indicating the order you want to modified
+    itemList is a list of food string (input from flask)
+    value is the amount of the food you want
+    '''
+    def modifyOrder(self, id, itemList, value):
+        #get the order that want to be modified
+        order = self.getNextOrder(None,id)
+        for food in itemList:
+            food = self.getFood(food)
 
-        # 3. elif item is not in the list, add item with value
-        elif item not in food:
-            # if customer enter value 0, do nothing
-            if value != 0:
-                food[item] = value
-           
+
+
+
+
+
+
+
 
     '''
     Generate receipt of an order
