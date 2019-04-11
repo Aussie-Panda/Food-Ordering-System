@@ -86,6 +86,5 @@ def checkStock(food, stock):
 			if stock.ingredients[item] < totalFood[item]:
 				emptyFood.append(item)
 	
-	if emptyFood:
-		raise StockError(emptyFood)
+	return emptyFood
 	
