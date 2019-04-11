@@ -16,15 +16,29 @@ def home():
         
         elif 'newOrder' in request.form:
             return redirect(url_for('menu'))
+        
+        elif 'confirmCS' in request.form:
+            return redirect(url_for('order_details', id=reqeust.form['id']))
+        
+        elif 'confirmCO' in request.form:
+            return redirect(url_for('menu', id=request.form['id']))
+        
     return render_template('home.html')
 
+# displaying menu and handle ordering
 @app.route("/menu", methods=["GET", "POST"])
-def menu():
+def menu(id=None):
     
     
     
     return render_template('menu.html')
 
+# displaying confirmed order details (receipt), and provide 'send receipt' option
+@app.route('/order/details', methods=['GET', 'POST'])
+def order_details():
+    
+
+    return render_template('order_details.html')
 
 
 # to run the project
