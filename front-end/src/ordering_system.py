@@ -1,10 +1,10 @@
-from food import Food
-from order import Order
-from stock import Stock
-from errors import StockError, bun_error, check_numBuns_error, checkStock
-from mains import Mains, Burger, Wrap
-from drinks import Drinks
-from sides import Sides
+from src.food import Food
+from src.order import Order
+from src.stock import Stock
+from src.errors import StockError, bun_error, check_numBuns_error, checkStock
+from src.mains import Mains, Burger, Wrap
+from src.drinks import Drinks
+from src.sides import Sides
 
 class OrderingSystem():
     def __init__(self):
