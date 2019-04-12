@@ -38,6 +38,7 @@ class OrderingSystem():
     # pass in str and get food instance from menu
     # size: str (sml, med, lrg, Bottles, Cans)
     # name: str
+    # Will raise SearchError if Food is not found
     def getFood(self,name,size=None):
         target = None
 
@@ -53,12 +54,13 @@ class OrderingSystem():
                 for i in menu:
                     if i.name == name and i.size == size:
                         target = i
-
-        return target
+        # if not found, raise SearchError
+        if target is None:
+            raise SearchError("Food")
 
 
     '''
-    make a new order once the customer enter the menu page.
+    make a new order once the customer enter the menu page. This will be appended to order list
     '''
     def makeOrder(self):
         
@@ -73,8 +75,7 @@ class OrderingSystem():
     Check if item in food is out of stock. If yes, raise StockErrors; if no, append it to order list and set status as "Pending"
     order: an Order instance
     return value: Order or None
-
-    Modified: don't need food, only need to create a new order and use modifyorder to add food
+    Will raise StockError if some food is out of stock
     '''
     def confirmOrder(self, order):
         
@@ -85,7 +86,6 @@ class OrderingSystem():
         else:
             order.updateOrder("Pending")
             # print(order)
-            price = order.computeNetPrice()
             # consume food
             self.stock.consumeFood(order.orderedItem)
             
@@ -96,29 +96,29 @@ class OrderingSystem():
     id is a int indicating the order you want to modified
     itemList is a list of food string (input from flask)
     value is the amount of the food you want
-    '''
+    
     def modifyOrder(self, id, itemList, value):
         #get the order that want to be modified
         order = self.getNextOrder(None,id)
         for food in itemList:
             food = self.getFood(food)
-
+    '''
     '''
     Generate receipt of an order
     order: an instance of Order
     return value: string
-    '''
+    
     def printReceipt(self,order):
         assert(order != None)
         
         receipt = f'---------Receipt--------\n{order}\n--------End of Receipt--------'
         return receipt
-
-
+    '''
     '''
     Get next order either by status or particular id.
     status: string, id: int
     return value: order (if found)/None(if not found)
+    Will raise Error if order not found
     '''
     def getNextOrder(self, status = None, id = None):
         target = None
@@ -183,6 +183,10 @@ class OrderingSystem():
     @property
     def stock(self):
         return self._stock
+    
+    '''
+    setters
+    '''
     
     @mainsMenu.setter
     def mainsMenu(self, new):

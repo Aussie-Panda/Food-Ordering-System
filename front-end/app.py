@@ -36,7 +36,7 @@ def home():
             
             # if no error occur, redirect to order detail page
             else:
-                return redirect(url_for('order_details', id=id))
+                return redirect(url_for('order_details', id=id, todo='checkStatus'))
             
         # if user insert orderID and confirm "Check Order"
         elif 'confirmCO' in request.form and 'id' in request.form:
@@ -47,9 +47,13 @@ def home():
             except (SearchError, ValueError) as er:
                 return render_template('home.html', form=request.form, continueOrder=True, error=str(er))
             
-            # if no error occur, r edirect to order detail page
+            # if no error occur and the order is not submitted, redirect to order detail page
             else:
-                return redirect(url_for('order_details', id=id))
+                if order.orderStatus != 'Not Submitted':
+                    er = "Your order has been submitted, please go to 'Check Status'"
+                    return render_template('home.html',  form=request.form, checkStatus=True, error=er)
+                else:
+                    return redirect(url_for('order_details', id=id, todo='continueOrder'))
         
     return render_template('home.html')
 
@@ -63,13 +67,19 @@ def menu(id):
 
 # displaying order detail. If order is submitted, it allows user to refresh to get latest order status and optionally send email.
 # If order is not submitted, it allows user to continue order by redirecting to menu page.
-@app.route('/order/details/<id>', methods=['GET', 'POST'])
-def order_details(id):
+@app.route('/order/details/<id>/<todo>', methods=['GET', 'POST'])
+def order_details(id, todo):
     id = int(id)
     try:
         order = system.getNextOrder(None, id)
     except (SearchError, ValueError) as er:
         return render_template('errors.html', msg=str(er))
+    '''
+    try:
+        order.updateOrder('dfdf')
+    except Exception as er:
+        return render_template('errors.html', msg=str(er))
+    '''
     msg = str(order)
     msg = Markup(msg.replace('\n', '<br/>'))
     status=order.orderStatus
@@ -80,14 +90,16 @@ def order_details(id):
             return render_template('order_details.html', msg=msg, status=status)
         
         # if user would like to send receipt to eamil
-        elif 'sendEmail' in request.form and 'email' in request.form:
+        elif 'sendEmail' in request.form and 'email' in request.form and request.form['email'] != "":
             return render_template('order_details.html', msg=msg, status=status, email=request.form['email'], send=True)
         
         # if the order is not submitted, and user want to continue ordering
         elif 'continueOrder' in request.form:
             return redirect(url_for('menu', id=id))
-        
-    return render_template('order_details.html', msg=msg, status=status)
+     
+    
+    return render_template('order_details.html', msg=msg, status=status, todo=todo)
+
 
 
 # to run the project

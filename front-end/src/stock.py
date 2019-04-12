@@ -26,19 +26,19 @@ class Stock():
     # consume food from stock
     def consumeFood(self,food):
         for item in food:
-                self.decreaseQuantity(item, food[item])
+            self.decreaseQuantity(item, food[item])
 
-                # for Mains, should further find out how many buns/patties/ingradients are consumed
-                if isinstance(item, Mains):
-                    for i in item.ingredientsOrdered.keys():
-                        self.decreaseQuantity(i, item.ingredientsOrdered[i]) 
+            # for Mains, should further find out how many buns/patties/ingradients are consumed
+            if isinstance(item, Mains):
+                for i in item.ingredientsOrdered.keys():
+                    self.decreaseQuantity(i, item.ingredientsOrdered[i]) 
 
-                    if isinstance(item, Burger):
-                        self.decreaseQuantity('buns', item.numBun)
-                        self.decreaseQuantity('patties', item.numPat)
-                    elif isinstance(item, Wrap):
-                        self.decreaseQuantity('patties', item.numPat)
-        
+                if isinstance(item, Burger):
+                    self.decreaseQuantity('buns', item.numBun)
+                    self.decreaseQuantity('patties', item.numPat)
+                elif isinstance(item, Wrap):
+                    self.decreaseQuantity('patties', item.numPat)
+    
     # item is a str, amount is int，size is str(Bottles, Cans)
     # for Juice, amount is in ml. For others amount is in whole 
     def increaseQuantity(self, item, amount, size = None):
@@ -58,11 +58,9 @@ class Stock():
                 target = f"{item}({size})"
                 self._drinks[target] += amount
 
-
         elif item.name in self._sides.keys():
             self._sides[item.name] += amount
             
-
         elif item.name in self._ingredients.keys():
             self._ingredients[item] += amount
     

@@ -1,5 +1,7 @@
 from src.food import Food
 from src.mains import Mains, Burger, Wrap
+from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
+import copy
 
 class Order():
     def __init__(self, orderId, orderStatus = "Not Submitted"):
@@ -11,14 +13,17 @@ class Order():
     # name: str, size = str
     # return value: the instance or Food (if found)/ None(if not found)
     def getFood(self,name,size=None):
+        target = None
         for i in self.orderedItem:
             if isinstance(i, Mains):
                 if i.name == name:
-                    return i
+                    target = i
             else:
                 if i.name == name and i.size == size:
-                    return i
-        return None
+                    target = i
+        # is not found, raise SearchError
+        if target is None:
+            raise SearchError(Food)
 
     # compute total price of the order
     # need to be change if Burger and wrap is ready.
@@ -35,13 +40,15 @@ class Order():
             quantity = self.orderedItem[item]
             totalPrice += (thisPrice * quantity)
 
-
         return totalPrice
 
 
-    # update orderStatus
+    # update orderStatus, raise Error if the input status is not valid
     def updateOrder(self, status):
-        self._orderStatus = status
+        if (status != 'Not Submitted' and status != 'Pending' and status != 'Preparing' and status != 'Ready' and status != 'Picked Up'):
+            raise Exception("Invalid Status Input")
+        else:
+            self._orderStatus = status
         
         
     def __str__(self):
@@ -58,7 +65,7 @@ class Order():
 
         
     '''
-    Method to modify the order
+    Method to modify the order, this will automatically duplicate Mains item
     food: a dictionary with key: instance of Food, value: int;
     item: instance of food;
     value: int.
@@ -84,7 +91,12 @@ class Order():
         elif item not in self.orderedItem:
             # if customer enter value 0, do nothing
             if value != 0:
-                self.orderedItem[item] = value
+                # if instance is a Mains, copy the original instance
+                if isinstance(item,Mains):
+                    new_i = copy.deepcopy(item)
+                    self.orderedItem[new_i] = value
+                else:
+                    self.orderedItem[item] = value
         
 
     ''' 
