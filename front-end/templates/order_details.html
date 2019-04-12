@@ -3,7 +3,7 @@
     the order status, user can either continue ordering or refresh
     order status andsending email receipt.
  -->
- 
+
 {% extends 'base.html' %}
 {% block body %}
 
@@ -13,17 +13,29 @@
     {{msg}}
 </div>
 <form method="POST">
-    <br/>
+    <br/><br />
     {% if status == "Not Submitted" %}
-        <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
-    {% elif status == "Pending" or status == "Ready" or status == "Picked up" %}
-        <input type="submit" name="refresh" value="Refresh"><br/><br/>
+        {% if todo == "checkStatus" %}
+            Your Order has not been sumitted, please continue ordering.<br/><br/>
+        {% elif todo == "continueOrder" %}
+            <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
+        {% endif %}
+
+    {% elif status == "Pending" or status == "Ready" or status == "Picked Up" %}
+        {% if status != "Picked Up" %}
+            <input type="submit" name="refresh" value="Refresh"><br/><br/>
+
+        {% elif status  == "Picked Up" %}
+            Your order has been picked up! Thank you for ordering in Memberless Restaurant!<br/>
+
+        {% endif %}    
+
         Would you like us to email you the receipt?<br/>
         If yes, please insert your email: <input name="email" placeholder="example@abc.com"/><br/>
         <br/>
         <input type="submit" name="sendEmail" value="Send Email"/><br/><br/>
         {% if send == True%}
-            Your receipt has been sent to {{email}}. Thank you for ordering!<br/>
+            Your receipt has been sent to "{{email}}". Thank you for ordering!<br/>
         {% endif %}
     {% endif %}
     <br/>
