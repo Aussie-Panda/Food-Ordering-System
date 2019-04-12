@@ -67,7 +67,7 @@ def menu(id):
 
 # displaying order detail. If order is submitted, it allows user to refresh to get latest order status and optionally send email.
 # If order is not submitted, it allows user to continue order by redirecting to menu page.
-@app.route('/order/details/<id>/<todo>', methods=['GET', 'POST'])
+@app.route('/order/details/<todo>/<id>', methods=['GET', 'POST'])
 def order_details(id, todo):
     id = int(id)
     try:
