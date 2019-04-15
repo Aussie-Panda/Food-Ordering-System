@@ -3,4 +3,19 @@
 <h1>Menu</h1>
 <h2 color="red">Your Order ID is: {{id}}</h2>
 
+<h3>Mains</h3>
+    {% for i in mainsM %}
+        {{i.name}}<br />
+    {% endfor %}
+
+<h3>Drinks</h3>
+    {% for i in drinksM %}
+        {{i.name}}<br />
+    {% endfor %}
+
+<h3>Sides</h3>
+    {% for i in sidesM %}
+        {{i.name}}<br />
+    {% endfor %}
+
 {% endblock %}

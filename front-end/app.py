@@ -63,7 +63,7 @@ def menu(id):
     
     
     
-    return render_template('menu.html',id=id)
+    return render_template('menu.html',id=id, mainsM=system.mainsMenu, drinksM=system.drinksMenu, sidesM=system.sidesMenu)
 
 # displaying order detail. If order is submitted, it allows user to refresh to get latest order status and optionally send email.
 # If order is not submitted, it allows user to continue order by redirecting to menu page.
