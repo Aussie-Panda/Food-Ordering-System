@@ -7,6 +7,24 @@ from src.errors import StockError, SearchError, bun_error, check_numBuns_error, 
 app = Flask(__name__)
 system = bootstrap_system()
 
+# take in a Mains instance and extract information
+def formatMains(food):
+    assert(isinstance(food, Mains))
+
+    pass
+
+# take in a Drinks or Sides instance and extract information
+def formatDS(food):
+    info = {}
+    for m in [system.drinksMenu, system.sidesMenu]:
+        for i in m:
+            if i.name == food:
+                info[i.size] = f' {i.volumn}{i.unit} {i.price}'
+                
+   
+    return info
+
+
 # a handler of root URL
 @app.route('/', methods=["GET", "POST"])
 def home():
@@ -60,14 +78,36 @@ def home():
 # displaying menu and handle ordering
 @app.route("/menu/<id>", methods=["GET", "POST"])
 def menu(id):
+    try:
+        order = system.getNextOrder(None,id)
+    except SearchError as er:
+        return render_template('errors.html', msg=str(er))
+
+    else:
+        orderDetail = str(order).replace('\n', '<br/>')
+        # print(orderDetail)
+        return render_template('menu.html',id=id, order=Markup(orderDetail), mainsM=system.mainsMenu, drinksM=system.drinksMenu, sidesM=system.sidesMenu)
+
+
+@app.route("/menu/<id>/Mains/<mains>", methods=["GET","POST"])
+def Mains(id,mains):
+    info = formatDS(mains)
+    return render_template('mains.html', food=mains, info=info)
+
+
+@app.route("/menu/<id>/DrinksOrSides/<drinks_or_sides>", methods=["GET", "POST"])
+def DrinksOrSides(id, drinks_or_sides):
+
+    info = formatDS(drinks_or_sides)
+    print(info)
     
-    
-    
-    return render_template('menu.html',id=id)
+    return render_template('drinks_or_sides.html', food=drinks_or_sides, info=info)
+
+
 
 # displaying order detail. If order is submitted, it allows user to refresh to get latest order status and optionally send email.
 # If order is not submitted, it allows user to continue order by redirecting to menu page.
-@app.route('/order/details/<id>/<todo>', methods=['GET', 'POST'])
+@app.route('/order/details/<todo>/<id>', methods=['GET', 'POST'])
 def order_details(id, todo):
     id = int(id)
     try:
