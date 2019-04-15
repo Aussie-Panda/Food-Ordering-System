@@ -19,9 +19,8 @@ def formatDS(food):
     for m in [system.drinksMenu, system.sidesMenu]:
         for i in m:
             if i.name == food:
-                info[i.size] = f' {i.volumn}{i.unit} {i.price}'
+                info[i.size] = f'{i.volumn}{i.unit} {i.price}'
                 
-   
     return info
 
 
@@ -91,8 +90,13 @@ def menu(id):
 
 @app.route("/menu/<id>/Mains/<mains>", methods=["GET","POST"])
 def Mains(id,mains):
-    info = formatDS(mains)
-    return render_template('mains.html', food=mains, info=info)
+    assert(mains!= None)
+    try:
+        food = system.getFood(mains)
+    except SearchError as er:
+        return render_template('errors.html', msg=str(er))
+
+    return render_template('mains.html', food=food)
 
 
 @app.route("/menu/<id>/DrinksOrSides/<drinks_or_sides>", methods=["GET", "POST"])

@@ -24,9 +24,6 @@
     	{% if i.name != sidesM[sidesM.index(i)-1].name %}
 	        <a href="{{ url_for('DrinksOrSides', id=id, drinks_or_sides=i.name) }}">{{i.name}}</a><br />
 		{% endif %}
-
-    	
-    	
     {% endfor %}
 
 

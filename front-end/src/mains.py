@@ -39,7 +39,7 @@ class Burger(Mains):
 
     def __init__(self,name, price):
         super().__init__(name,price)
-        self._addOn = [Buns, Patties]
+        self._addOn = ['Buns', 'Patties']
         self._numBun = 0
         self._numPat = 0
 
@@ -82,7 +82,7 @@ class Wrap(Mains):
 
     def __init__(self, name, price):
         super().__init__(name, price)
-        self._addOn = [Patties]
+        self._addOn = ['Patties']
         self._numPat = 0
 
     def computePrice(self):

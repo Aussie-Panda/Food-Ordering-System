@@ -1,14 +1,27 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h2>{{food}}</h2>
+<h2>{{food.name}}</h2>
 
 <form method="POST">
+	{% for a in food.addOn %}
+		{{a}}: <input name={{a}} placeholder="Please insert integer"/>
+		<input type="submit" name="add{{a}}" value="Add {{a}}"/><br/>
+	{% endfor %}
+	<br/>
+	Ingredients:
+	<select name='ingredients'>
+		{% for i in food.ingredientsMenu.keys() %}
+			<option value={{i}}>{{i}} ${{food.ingredientsMenu[i]}}</option>
+		{% endfor %}
+	</select>
+	<br/><br/>
+	Quantity:
+	<input name="quantity" placeholder="Please insert integer"/>
+	<input type="submit" name="addIngredients" value="Add Ingredients"/>
+	<br/><br/>
 
-
-
-
- 	<input type="submit" name= "confirm" value="Confirm"/>
+ 	<input type="submit" name="confirm" value="Confirm"/>
  	<input type="submit" name="cancel" value="Cancel"/>
 </form>
 {% endblock %}

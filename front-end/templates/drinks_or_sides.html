@@ -8,7 +8,7 @@
 		Size:
 		<select name="size">
 			{% for size in info.keys() %}
-				<option value={{size}}>{{size}}({{info[size].split()[0]}})</option>
+				<option value={{size}}>{{size}}({{info[size].split()[0]}}) ${{info[size].split()[1]}}</option>
 			{% endfor %}
 		</select>
 		<br /><br />
