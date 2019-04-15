@@ -57,6 +57,8 @@ class OrderingSystem():
         # if not found, raise SearchError
         if target is None:
             raise SearchError("Food")
+        else:
+            return target
 
 
     '''
@@ -122,6 +124,7 @@ class OrderingSystem():
     '''
     def getNextOrder(self, status = None, id = None):
         target = None
+        id = int(id)
         if id is None:
             for i in self.order:
                 if i.orderStatus == status:

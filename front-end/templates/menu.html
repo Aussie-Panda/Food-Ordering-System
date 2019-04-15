@@ -1,21 +1,37 @@
 {% extends 'base.html' %}
 {% block body %}
 <h1>Menu</h1>
+
 <h2 color="red">Your Order ID is: {{id}}</h2>
 
+	
 <h3>Mains</h3>
     {% for i in mainsM %}
-        {{i.name}}<br />
+        <a href="{{ url_for('Mains', id=id, mains=i.name) }}">{{i.name}}</a><br />
     {% endfor %}
 
 <h3>Drinks</h3>
     {% for i in drinksM %}
-        {{i.name}}<br />
+    	<!-- get rid of duplicate -->
+    	{% if i.name != drinksM[drinksM.index(i)-1].name %}
+        	<a href="{{ url_for('DrinksOrSides', id=id, drinks_or_sides=i.name) }}">{{i.name}}</a><br />
+    	{% endif %}
     {% endfor %}
 
 <h3>Sides</h3>
     {% for i in sidesM %}
-        {{i.name}}<br />
+    	<!-- get rid of duplicate -->
+    	{% if i.name != sidesM[sidesM.index(i)-1].name %}
+	        <a href="{{ url_for('DrinksOrSides', id=id, drinks_or_sides=i.name) }}">{{i.name}}</a><br />
+		{% endif %}
+
+    	
+    	
     {% endfor %}
 
+
+<div>
+	<h2>Current Order:</h2>
+	{{order}}
+</div>
 {% endblock %}

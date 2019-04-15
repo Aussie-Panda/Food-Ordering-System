@@ -17,17 +17,17 @@ def bootstrap_system():
     wrap = Wrap('Wrap', 4)
 
     # Drinks(name, price, size, volumn)
-    can = Drinks('Lemonade', 3, 'Cans', 375)
-    bottles = Drinks('Lemonade', 5, 'Bottles', 600)
-    smlJuice = Drinks('Orange_Juice', 2, 'sml', 250)
-    medJuice = Drinks('Orange_Juice', 4, 'med', 450)
+    can = Drinks('Lemonade', 3, 'Cans', 375, 'ml')
+    bottles = Drinks('Lemonade', 5, 'Bottles', 600, 'ml')
+    smlJuice = Drinks('Orange_Juice', 2, 'sml', 250, 'ml')
+    medJuice = Drinks('Orange_Juice', 4, 'med', 450, 'ml')
 
     # Sides(self, name, price, size, type)
-    smlNuggets = Sides('Nuggets', 1, 'sml', 3)
-    lrgNuggets = Sides('Nuggets', 2, 'lrg', 6)
-    smlFries = Sides('Fries', 1, 'sml', 20)
-    medFries = Sides('Fries', 2, 'med', 40)
-    lrgFries = Sides('Fries', 3, 'lrg', 60)
+    smlNuggets = Sides('Nuggets', 1, 'sml', 3, '/pack')
+    lrgNuggets = Sides('Nuggets', 2, 'lrg', 6, '/pack')
+    smlFries = Sides('Fries', 1, 'sml', 20, 'g')
+    medFries = Sides('Fries', 2, 'med', 40, 'g')
+    lrgFries = Sides('Fries', 3, 'lrg', 60, 'g')
 
     system.mainsMenu = [burger, wrap]
     system.drinksMenu = [can, bottles, smlJuice, medJuice]

@@ -1,10 +1,11 @@
 from src.food import Food
 
 class Sides(Food):
-	def __init__(self, name, price, size, volumn):
+	def __init__(self, name, price, size, volumn, unit):
 		super().__init__(name, price)
 		self._size = size
 		self._volumn = volumn 
+		self._unit = unit
 
 	@property
 	def size(self):
@@ -13,6 +14,10 @@ class Sides(Food):
 	@property
 	def volumn(self):
 		return self._volumn
+	
+	@property
+	def unit(self):
+		return self._unit
 	
 
 	def computePrice(self):
