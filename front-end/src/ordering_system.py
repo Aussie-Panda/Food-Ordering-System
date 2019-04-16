@@ -20,6 +20,15 @@ class OrderingSystem():
         self._id += 1
         return self._id
 
+    # add food into category, food: food instance
+    def addFood(self, category,food):
+        assert(food != None)
+        if category in [self.mainsMenu, self.sidesMenu, self.drinksMenu]:
+            category.append(food)
+        else:
+            raise Exception('No such menu')
+
+    
     def displayMenu(self):
         print("--------MENU--------")
         print("  ---Mains Menu---")
