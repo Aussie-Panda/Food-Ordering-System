@@ -98,6 +98,23 @@ class Order():
                 new_i = copy.deepcopy(item)
                 self.orderedItem[new_i] = value
 
+    '''
+    method to add food into order
+    item: an instance from system menu
+    '''
+    def addFood(self, value, item):
+        assert (value > 0)
+        new_item = copy.deepcopy(item)
+        self.orderedItem[new_item] = value
+
+    '''
+    method to delete food from order
+    item: an instance from orderedItem
+    '''
+    def deleteFood(self, item):
+        self.orderedItem.pop(item)
+
+
     ''' 
     Properties
     '''
