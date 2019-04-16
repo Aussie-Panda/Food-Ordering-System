@@ -13,26 +13,38 @@ def bootstrap_system():
     
     # initialise menu
     # Mains Burger(numBun, numPat) Wrap(numPat)
-    burger = Burger('Burger', 5)
-    wrap = Wrap('Wrap', 4)
+    mains = [
+        Burger('Burger', 5),
+        Wrap('Wrap', 4),
+    ]
+    
 
     # Drinks(name, price, size, volumn)
-    can = Drinks('Lemonade', 3, 'Cans', 375, 'ml')
-    bottles = Drinks('Lemonade', 5, 'Bottles', 600, 'ml')
-    smlJuice = Drinks('Orange_Juice', 2, 'sml', 250, 'ml')
-    medJuice = Drinks('Orange_Juice', 4, 'med', 450, 'ml')
+    drinks = [
+        Drinks('Lemonade', 3, 'Cans', 375, 'ml'),
+        Drinks('Lemonade', 5, 'Bottles', 600, 'ml'),
+        Drinks('Orange_Juice', 2, 'sml', 250, 'ml'),
+        Drinks('Orange_Juice', 4, 'med', 450, 'ml'),
+    ]
 
     # Sides(self, name, price, size, type)
-    smlNuggets = Sides('Nuggets', 1, 'sml', 3, '/pack')
-    lrgNuggets = Sides('Nuggets', 2, 'lrg', 6, '/pack')
-    smlFries = Sides('Fries', 1, 'sml', 20, 'g')
-    medFries = Sides('Fries', 2, 'med', 40, 'g')
-    lrgFries = Sides('Fries', 3, 'lrg', 60, 'g')
+    sides = [
+        Sides('Nuggets', 1, 'sml', 3, '/pack'),
+        Sides('Nuggets', 2, 'lrg', 6, '/pack'),
+        Sides('Fries', 1, 'sml', 20, 'g'),
+        Sides('Fries', 2, 'med', 40, 'g'),
+        Sides('Fries', 3, 'lrg', 60, 'g'),
+    ]
 
-    system.mainsMenu = [burger, wrap]
-    system.drinksMenu = [can, bottles, smlJuice, medJuice]
-    system.sidesMenu = [smlNuggets, lrgNuggets, smlFries, medFries, lrgFries]
-    
+    for f in mains:
+        system.addFood(system.mainsMenu,f)
+
+    for f in drinks:
+        system.addFood(system.drinksMenu,f)
+
+    for f in sides:
+        system.addFood(system.sidesMenu, f)
+
     # initialise stock
     for category in [system.stock.mains, system.stock.drinks, system.stock.sides, system.stock.ingredients]:
         for item in category:
