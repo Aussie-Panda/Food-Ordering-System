@@ -5,9 +5,23 @@
 
 <form method="POST">
 	{% for a in food.addOn %}
-		{{a}}: <input name={{a}} placeholder="Please insert integer"/>
+		{{a}}:
+		{% if a == "Buns" %}
+			<select name={{a}}>
+				{% for i in [2, 3, 4] %}
+					<option value={{i}}>{{i}}</option>
+				{% endfor %}
+			</select>
+
+		{% else %}
+			<input  name={{a}} placeholder="Please insert integer"/>
+
+		{% endif %}
+
 		<input type="submit" name="add{{a}}" value="Add {{a}}"/><br/>
+		<br/>
 	{% endfor %}
+
 	<br/>
 	Ingredients:
 	<select name='ingredients'>
