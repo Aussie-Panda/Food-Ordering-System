@@ -9,6 +9,8 @@ class Mains(Food):
         #dictionary of ingredient that have been ordered
         self._ingredientsOrdered = {}
         self._ingredientsMenu = {'tomato': 1, 'lettuce' : 1, 'cheddar_cheese' : 2, 'swisse_cheese' : 3, 'tomato_sauce' : 1}
+        self._bunPrice = 1
+        self._patPrice = 2
     
     #getters and setters
     @property
@@ -37,10 +39,9 @@ class Burger(Mains):
 
     def __init__(self,name, price):
         super().__init__(name,price)
+        self._addOn = ['Buns', 'Patties']
         self._numBun = 0
         self._numPat = 0
-        self._bunPrice = 1
-        self._patPrice = 2
 
     def computePrice(self):
         burger_price = self._price + self._numBun * self._bunPrice + self._numPat * self._patPrice
@@ -56,6 +57,10 @@ class Burger(Mains):
     def addPats(self, amount):
         self._numPat += amount
 
+    @property
+    def addOn(self):
+        return self._addOn
+    
     @property
     def numBun(self):
         return self._numBun
@@ -77,8 +82,8 @@ class Wrap(Mains):
 
     def __init__(self, name, price):
         super().__init__(name, price)
+        self._addOn = ['Patties']
         self._numPat = 0
-        self._patPrice = 2
 
     def computePrice(self):
         total = self._price + self._numPat * self._patPrice
@@ -90,7 +95,10 @@ class Wrap(Mains):
 
     def addPats(self, amount):
         self._numPat += amount
-        
+    @property
+    def addOn(self):
+        return self._addOn
+    
     @property
     def numPat(self):
         return self._numPat

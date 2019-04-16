@@ -10,6 +10,7 @@ class OrderingSystem():
     def __init__(self):
         self._id = 0
         self._order = []            # a list of Order. order's id should be in increasing order
+        # self._category = ['Mains': self._mainsMenu, 'Drinks': self._drinksMenu, 'Sides': self._sidesMenu]
         self._mainsMenu = []        # a list of Mains
         self._drinksMenu = []       # a list of drinks
         self._sidesMenu = []        # a list of sides
@@ -19,6 +20,15 @@ class OrderingSystem():
         self._id += 1
         return self._id
 
+    # add food into category, food: food instance
+    def addFood(self, category,food):
+        assert(food != None)
+        if category in [self.mainsMenu, self.sidesMenu, self.drinksMenu]:
+            category.append(food)
+        else:
+            raise Exception('No such menu')
+
+    
     def displayMenu(self):
         print("--------MENU--------")
         print("  ---Mains Menu---")

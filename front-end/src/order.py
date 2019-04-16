@@ -9,9 +9,11 @@ class Order():
         self._orderedItem = {}          # a dictionary, key=Food, value=int
         self._orderStatus = orderStatus # string
 
-    # get a particular food from the order
-    # name: str, size = str
-    # return value: the instance or Food (if found)/ None(if not found)
+    '''TODO
+    get a particular food from the order
+    name: str, size = str
+    return value: the instance or Food (if found)/ None(if not found)
+    '''
     def getFood(self,name,size=None):
         target = None
         for i in self.orderedItem:
@@ -64,21 +66,22 @@ class Order():
         return msg
 
         
-    '''
+    '''TODO
     Method to modify the order, this will automatically duplicate Mains item
     food: a dictionary with key: instance of Food, value: int;
-    item: instance of food;
-    value: int.
-    return value:None
+    value(int): quantity that want to modify
+    item(str): food name
+    size(str): size of food(if has)
+    return value: None
     '''
-    def modify(self, item=None, value=None):
+    def modify(self, value=None, item=None, size=None):
         assert(item != None)
         assert(value != None)
         
         # If any invalid value is passed in, return None and empty error list
         if value < 0:
-            return None,[]
-            
+            return None
+
         # 1. if item is in the order and value is set to 0, delete the item
         # 2. elif item is in the list and value is > 0, overwrite the previous value
         elif item in self.orderedItem:
@@ -91,13 +94,26 @@ class Order():
         elif item not in self.orderedItem:
             # if customer enter value 0, do nothing
             if value != 0:
-                # if instance is a Mains, copy the original instance
-                if isinstance(item,Mains):
-                    new_i = copy.deepcopy(item)
-                    self.orderedItem[new_i] = value
-                else:
-                    self.orderedItem[item] = value
-        
+                #  copy the original instance
+                new_i = copy.deepcopy(item)
+                self.orderedItem[new_i] = value
+
+    '''
+    method to add food into order
+    item: an instance from system menu
+    '''
+    def addFood(self, value, item):
+        assert (value > 0)
+        new_item = copy.deepcopy(item)
+        self.orderedItem[new_item] = value
+
+    '''
+    method to delete food from order
+    item: an instance from orderedItem
+    '''
+    def deleteFood(self, item):
+        self.orderedItem.pop(item)
+
 
     ''' 
     Properties
