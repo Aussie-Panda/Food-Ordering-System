@@ -1,7 +1,8 @@
 # import Flask library
-from flask import Flask, render_template, request, redirect, url_for, abort, Markup
-from init import bootstrap_system
+from flask import Flask, render_template, request, redirect, url_for, abort, Markup,session, make_response
+from init import bootstrap_system#, ser, orders
 from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
+from src.shoppingCart import Cart
 
 # create a flask project, assigning to a variable called app
 app = Flask(__name__)
@@ -13,6 +14,7 @@ def formatMains(food):
 
     pass
 
+
 # take in a Drinks or Sides instance and extract information
 def formatDS(food):
     info = {}
@@ -23,6 +25,26 @@ def formatDS(food):
                 
     return info
 
+# def fetch_session_cart(id):
+#     # Creates a new cart first if the cart never existed
+#     if 'cart' not in session:
+#         print('cart not in session')
+#         cart = Cart()
+#         session['cart'] = id
+#         orders[id] = cart
+#     else:
+#         # Check the current cookie is valid
+#         print('cart in session')
+#         try:
+#             return orders[session['cart']]
+#         except KeyError: 
+#             print('exception raised: cart not in session')
+#             cart = Cart()
+#             session['cart'] = cart._id
+#             orders[cart._id] = cart
+#             print(cart._id)
+#             print("session cookie from ex: " ,session['cart'])
+#     return orders[session['cart']]
 
 # a handler of root URL
 @app.route('/', methods=["GET", "POST"])
@@ -40,6 +62,7 @@ def home():
         # if user click "Make New Order" button, create new order and redirect to menu page
         elif 'newOrder' in request.form:
             order = system.makeOrder()
+            # fetch_session_cart(order.orderId)
             return redirect(url_for('menu', id=order.orderId))
         
         # if user insert orderID and comfirm "Check Status"
@@ -95,6 +118,43 @@ def Mains(id,mains):
         food = system.getFood(mains)
     except SearchError as er:
         return render_template('errors.html', msg=str(er))
+    # print('food is', food, 'type is ', type(food))
+    
+    if request.method == 'POST':
+        numBun = request.form['Buns']
+        # print(numBun, int(numBun))
+        # int_numBun = int(numBun)
+        numPat = request.form['Patties']
+        # int_numPat = int(numPat)
+        # print(numPat)
+        
+        ingreds = request.form['ingredients']
+        # print('ingred is :', ingreds)
+        ingredQty = request.form['quantity']
+        # print('ingredqty is :', ingredQty)
+        food.changeIngredients(ingreds,ingredQty)
+        #whyyyyyyyyyy?????????????
+        # food.addBuns(int_numBun)
+        # food.addPats(int_numPat)
+        # food._numBun = float(int_numBun)
+        # food._numPat = float(int_numPat)
+        print('food is', food)
+
+        if 'confirm' in request.form:
+            # put food into ordered list
+            order = system.getNextOrder(None,id)
+            # ERROR order not found here
+            print(order)
+            # not sure!!!!!!!!!
+            order.orderedItem[food] = 1
+            print(order)
+            
+            #put food in the cart
+            # cart = fetch_session_cart()
+            # cart._items.append(food)
+            # print("no: ", len(cart._items))
+
+
 
     return render_template('mains.html', food=food)
 
@@ -124,6 +184,7 @@ def order_details(id, todo):
     except Exception as er:
         return render_template('errors.html', msg=str(er))
     '''
+    # order.updateOrder('Pending')
     msg = str(order)
     msg = Markup(msg.replace('\n', '<br/>'))
     status=order.orderStatus
