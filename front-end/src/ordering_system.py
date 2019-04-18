@@ -28,7 +28,7 @@ class OrderingSystem():
         else:
             raise Exception('No such menu')
 
-    
+    '''
     def displayMenu(self):
         print("--------MENU--------")
         print("  ---Mains Menu---")
@@ -44,7 +44,7 @@ class OrderingSystem():
             print(item)
 
         print("-------End of Menu-------")
-
+    '''
     # pass in str and get food instance from menu
     # size: str (sml, med, lrg, Bottles, Cans)
     # name: str
