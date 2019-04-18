@@ -3,12 +3,16 @@ class Cart:
         self._id = id
         self._items = {}
 
-    def addFood(self, food, quantity):
+    def addFood(self, food, quantity, overwrite = False):
         assert(type(food) is str)
         if food not in self._items.keys():
             self._items[food] = quantity
+
         else:
-            self._items[food] += quantity
+            if overwrite == True:
+                self._items[food] = quantity
+            else:
+                self._items[food] += quantity
         
     def deleteFood(self, food, quantity=None):
         assert(type(food) is str)
