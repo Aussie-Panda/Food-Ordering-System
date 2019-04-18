@@ -58,9 +58,4 @@ def bootstrap_system():
     
     return system
 
-# ser = Flask(__name__)
-# ser.secret_key = 'very-secret-123'  # Used to add entropy
-
-# # Loads data
-# orders = {}
 

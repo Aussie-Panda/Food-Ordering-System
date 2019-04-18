@@ -52,19 +52,7 @@ class Order():
         else:
             self._orderStatus = status
         
-        
-    def __str__(self):
-        price = self.computeNetPrice()
-        msg = ""
-        msg += f"Order id: {self._orderId}\n"
-        msg += "Order items:\n"
-        for i in self._orderedItem.keys():
-            quantity = str(self._orderedItem[i])
-            msg += f"{i} * {quantity}\n"
-        msg += f"Order status: {self._orderStatus}\n"
-        msg += f"Total Price: ${price}"
-        return msg
-
+   
         
     '''TODO
     Method to modify the order, this will automatically duplicate Mains item
@@ -100,12 +88,11 @@ class Order():
 
     '''
     method to add food into order
-    item: an instance from system menu
+    item: an new instance of food
     '''
-    def addFood(self, value, item):
+    def addFood(self, item, value):
         assert (value > 0)
-        new_item = copy.deepcopy(item)
-        self.orderedItem[new_item] = value
+        self.orderedItem[item] = value
 
     '''
     method to delete food from order
@@ -113,6 +100,18 @@ class Order():
     '''
     def deleteFood(self, item):
         self.orderedItem.pop(item)
+
+    def __str__(self):
+        price = self.computeNetPrice()
+        msg = ""
+        msg += f"Order id: {self._orderId}\n\n"
+        msg += "Order items:\n"
+        for i in self._orderedItem.keys():
+            quantity = str(self._orderedItem[i])
+            msg += f"{i} * {quantity}\n"
+        msg += f"\nOrder status: {self._orderStatus}\n\n"
+        msg += f"Total Price: ${price}"
+        return msg
 
 
     ''' 
