@@ -6,7 +6,7 @@ from src.errors import StockError, bun_error, check_numBuns_error, checkStock
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
-
+from flask import Flask
 
 def bootstrap_system():
     system = OrderingSystem()
@@ -19,7 +19,7 @@ def bootstrap_system():
     ]
     
 
-    # Drinks(name, price, size, volumn)
+    # Drinks(name, price, size, volumn, unit)
     drinks = [
         Drinks('Lemonade', 3, 'Cans', 375, 'ml'),
         Drinks('Lemonade', 5, 'Bottles', 600, 'ml'),
@@ -47,6 +47,7 @@ def bootstrap_system():
 
     # initialise stock
     for category in [system.stock.mains, system.stock.drinks, system.stock.sides, system.stock.ingredients]:
+        
         for item in category:
             if item == 'Fries':
                 category[item] = 10000
@@ -56,3 +57,10 @@ def bootstrap_system():
                 category[item] = 100
     
     return system
+
+# ser = Flask(__name__)
+# ser.secret_key = 'very-secret-123'  # Used to add entropy
+
+# # Loads data
+# orders = {}
+

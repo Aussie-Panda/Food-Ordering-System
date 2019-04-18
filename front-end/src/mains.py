@@ -64,7 +64,7 @@ class Burger(Mains):
     @property
     def numBun(self):
         return self._numBun
-     
+    
     @property
     def numPat(self):
         return self._numPat
