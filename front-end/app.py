@@ -152,55 +152,96 @@ def Mains(id,mains):
     except SearchError as er:
         return render_template('errors.html', msg=str(er))
     # print('food is', food, 'type is ', type(food))
-    
+
+    cart = fetch_session_cart(id)
+    try:
+        order = system.getNextOrder(None, id)
+    except (SearchError, ValueError) as er:
+        return render_template('errors.html',error=str(er))
     if request.method == 'POST':
-        
+        numBun = 0
+        numPat = 0
+        cart = fetch_session_cart(id)
         if 'add' in request.form:
             target = request.form['add'][4:]
-            num = int(request.form[target])
-                    
-        # numBun = int(request.form['Buns'])
-        # # int_numBun = int(numBun)
-        # print (type(request.form['Patties']), request.form['Patties'])
-        # numPat = request.form['Patties']
-        # numPat = int(numPat)
-        # # numPat = int(request.form['Patties'])
-        # # int_numPat = int(numPat)
-        # # print(numPat)
+            # print(type(target)
+            
+            if request.form[target] == '':
+                num = 0
+            else:
+                num = int(request.form[target])
+            
+            # print(cart._items)
+            if target == 'Buns':
+                numBun = num
+                cart.addFood(target,num, True)
+                print('numBun is ', numBun)
+            elif target == 'Patties':
+
+                numPat = num
+                cart.addFood(target,num)
+                print('numPat is ', numPat)
         
-        # ingreds = request.form['ingredients']
-        # # print('ingred is :', ingreds)
-        # ingredQty = request.form['quantity']
-        # # print('ingredqty is :', ingredQty)
-        # food.changeIngredients(ingreds,ingredQty)
-        # #whyyyyyyyyyy?????????????
-        # # food.addBuns(int_numBun)
-        # # food.addPats(int_numPat)
-        # # food._numBun = float(int_numBun)
-        # # food._numPat = float(int_numPat)
+        ingreds = request.form['ingredients']
+        # print('ingred is :', ingreds)
+        ingredQty = request.form['quantity']
+        
+        # if (ingreds == ''):
+        #     ingreds = None
+        
+
+        if (ingredQty == ''):
+            ingredQty = 0
+
+        if ingredQty != 0:
+            cart.addFood(ingreds, int(ingredQty))
+            # print(cart._items)
+            # print('ingredqty is :', ingredQty)
+        
         # print('food is', food)
 
-        # if 'confirm' in request.form:
-        #     try:
-        #         # put food into ordered list
-        #         order = system.getNextOrder(None,id)
-        #         # ERROR order not found here
-        #     except SearchError as er:
-        #         return render_template('errors.html', msg=str(er))
-        #     print(order)
-        #     # not sure!!!!!!!!!
-        #     order.orderedItem[food] = 1
-        #     print(order)
+        if 'confirm' in request.form:
+            new_food = copy.deepcopy(food)
+            try:
+                # put food into ordered list
+                order = system.getNextOrder(None,id)
+                # ERROR order not found here
+            except SearchError as er:
+                return render_template('errors.html', msg=str(er))
+            # print(order)
             
-            #put food in the cart
-            # cart = fetch_session_cart()
-            # cart._items.append(food)
-            # print("no: ", len(cart._items))
+            
+            # print(order)
+            if ingredQty != 0:
+                new_food.changeIngredients(ingreds,cart.items[ingreds])
+            # print('after confirm', numBun)
+            for elem in new_food.addOn:
+                if elem in cart._items.keys():
+                    num = cart._items[elem]
+                    if elem == 'Buns':
+                        new_food.addBuns(num)
+                    elif elem == 'Patties':
+                        new_food.addPats(num)
+            # numBun = cart._items['Buns']
+            # numPat = cart._items['Patties']
+            # if (numBun != 0):
+            #     new_food.addBuns(numBun)
+            # if numPat != 0:
+            #     new_food.addPats(numPat)
+            print(new_food)
+            order.addFood(new_food, 1)
+            print(order)
+            cart.empty()
+            return render_template('mains.html', food=new_food,orderedItem=cart._items, finish=True)
 
         if 'cancel' in request.form:
+            cart.empty()
+            return redirect(url_for('menu', id=id))
+        
+        elif 'return' in request.form:
             return redirect(url_for('menu', id=id))
 
-    return render_template('mains.html', food=food)
+    return render_template('mains.html', food=food, orderedItem=cart._items)
 
 
 @app.route("/menu/<id>/DrinksOrSides/<drinks_or_sides>", methods=["GET", "POST"])
