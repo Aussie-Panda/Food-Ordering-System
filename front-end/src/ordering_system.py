@@ -66,7 +66,7 @@ class OrderingSystem():
                         target = i
         # if not found, raise SearchError
         if target is None:
-            raise SearchError("Food")
+            raise SearchError(f"{name}")
         else:
             return target
 

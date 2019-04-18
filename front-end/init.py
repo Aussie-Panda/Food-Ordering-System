@@ -27,13 +27,16 @@ def bootstrap_system():
         Drinks('Orange_Juice', 4, 'med', 450, 'ml'),
     ]
 
-    # Sides(self, name, price, size, type)
+    # Sides(self, name, price, size, volumn, unit)
     sides = [
         Sides('Nuggets', 1, 'sml', 3, '/pack'),
         Sides('Nuggets', 2, 'lrg', 6, '/pack'),
         Sides('Fries', 1, 'sml', 20, 'g'),
         Sides('Fries', 2, 'med', 40, 'g'),
         Sides('Fries', 3, 'lrg', 60, 'g'),
+        Sides('Sundae', 10, 'sml', 20, 'g'),
+        Sides('Sundae', 12, 'med', 30, 'g'),
+        Sides('Sundae', 14, 'lrg', 40, 'g'),
     ]
 
     for f in mains:
@@ -49,12 +52,7 @@ def bootstrap_system():
     for category in [system.stock.mains, system.stock.drinks, system.stock.sides, system.stock.ingredients]:
         
         for item in category:
-            if item == 'Fries':
-                category[item] = 10000
-            elif 'Juice' in item:
-                category[item] = 100000
-            else:
-                category[item] = 100
+           category[item] = 10000
     
     return system
 

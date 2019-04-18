@@ -29,6 +29,18 @@
 
 <div>
 	<h2>Current Order:</h2>
-	{{order}}
+	<form method='POST'>
+		Order id: {{order.orderId}}<br/><br/>
+		Order items:<br />
+		{% for i in order.orderedItem.keys() %}
+			{{i}} * {{order.orderedItem[i]}} <input type="submit" name="delete" value="Delete {{i.name}}"/><br/>
+		{% endfor %}
+		<br/>
+		Order Status: {{order.orderStatus}}<br/><br/>
+		Total Price: ${{order.computeNetPrice()}}<br/><br>
+
+		<input type="submit" name="confirm" value="Confirm" />
+		<font size="3" color="red">{{error}}</font><br />
+	</form>
 </div>
 {% endblock %}

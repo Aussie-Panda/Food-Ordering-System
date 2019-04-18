@@ -7,12 +7,12 @@ class StockError(Exception):
 	def __init__(self, errors, msg=None):
 
 		if msg is None:
-			msg = "Those items are out of stock: %s"%(', '.join(errors))
+			self._msg = "Those items are out of stock: %s"%(', '.join(errors))
 
 		self._errors = errors
 
 	def __str__(self):
-		return msg
+		return self._msg
 
 	@property
 	def errors(self):

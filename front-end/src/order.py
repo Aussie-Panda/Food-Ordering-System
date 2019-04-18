@@ -26,7 +26,9 @@ class Order():
         # is not found, raise SearchError
         if target is None:
             raise SearchError(Food)
-
+        else:
+            return target
+        
     # compute total price of the order
     # need to be change if Burger and wrap is ready.
     def computeNetPrice(self):
@@ -92,8 +94,19 @@ class Order():
     '''
     def addFood(self, item, value):
         assert (value > 0)
-        self.orderedItem[item] = value
-
+        try:
+            size = item.size
+        
+        except:
+            self.orderedItem[item] = value
+            
+        else:
+            try:
+                food = self.getFood(item.name, size)
+            except SearchError:
+                self.orderedItem[item] = value
+            else:
+                self.orderedItem[food] += value
     '''
     method to delete food from order
     item: an instance from orderedItem
