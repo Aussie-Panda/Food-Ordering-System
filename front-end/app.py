@@ -327,6 +327,7 @@ def order_details(id, todo):
         # if user would like to refresh order status
         if 'refresh' in request.form:
             status=order.orderStatus
+            print(status)
             return render_template('order_details.html', msg=msg, status=status)
         
         # if user would like to send receipt to eamil
