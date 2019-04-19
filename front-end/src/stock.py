@@ -3,8 +3,9 @@ class Stock():
     def __init__(self):
         self._mains = { 'Burger': 0, 'Wrap': 0}
         self._drinks = {'Lemonade(Bottles)': 0, 'Lemonade(Cans)': 0, 'Orange_Juice': 0}
-        self._sides = {'Fries': 0, 'Nuggets': 0}
+        self._sides = {'Fries': 0, 'Nuggets': 0, 'Sundae': 0}
         self._ingredients = {'buns': 0, 'patties': 0, 'tomato': 0, 'lettuce' : 0, 'cheddar_cheese' : 0, 'swiss_cheese' : 0, 'tomato_sauce' : 0}
+        self._whole = {'Mains': self._mains, 'Drinks': self._drinks, 'Sides': self._sides, 'Ingredients': self._ingredients}
 
     @property
     def mains(self):
@@ -22,6 +23,9 @@ class Stock():
     def ingredients(self):
         return self._ingredients
 
+    @property
+    def whole(self):
+        return self._whole
 
     # consume food from stock
     def consumeFood(self,food):
@@ -32,41 +36,24 @@ class Stock():
             if isinstance(item, Mains):
                 for i in item.ingredientsOrdered.keys():
                     self.decreaseQuantity(i, item.ingredientsOrdered[i]) 
-
-                if isinstance(item, Burger):
-                    self.decreaseQuantity('buns', item.numBun)
-                    self.decreaseQuantity('patties', item.numPat)
-                elif isinstance(item, Wrap):
-                    self.decreaseQuantity('patties', item.numPat)
+                for a in item.addOn.keys():
+                    aL = a.lower()
+                    self.decreaseQuantity(aL, item.addOn[a])
     
     # item is a str, amount is int，size is str(Bottles, Cans)
     # for Juice, amount is in ml. For others amount is in whole 
-    def increaseQuantity(self, item, amount, size = None):
+    def increaseQuantity(self, item, amount):
         assert(item != None)
         assert(amount != None)
         
-        if item.name in self._mains.keys() :
-            self._mains[item] += amount
-
-        elif item in self._drinks.keys():
-            if 'Juice' in item.name:
-                self._drinks[item.name] += amount
-
-            else:
-                assert(size != None)
-                # convert item name to name in stock 
-                target = f"{item}({size})"
-                self._drinks[target] += amount
-
-        elif item.name in self._sides.keys():
-            self._sides[item.name] += amount
-            
-        elif item.name in self._ingredients.keys():
-            self._ingredients[item] += amount
+        for stock in self.whole.keys():
+            if item in self.whole[stock]:
+                self.whole[stock][item] += amount
+        
     
     # item is a str or instance of Food, amount is instance of Food.
     def decreaseQuantity(self, item, amount):
-        
+        assert(amount>=0)
         # ingredients don't have class(instance)
         if type(item) is str:
             if item in self._ingredients.keys():

@@ -177,6 +177,7 @@ def menu(id):
                 raise(er)
             print(food_to_delete)
             order.deleteFood(food_to_delete)
+            
         elif 'confirm' in request.form:
             if len(order.orderedItem) == 0:
                 error = 'Please order at least 1 item.'
@@ -382,7 +383,8 @@ def staff():
                     error = str(er)
                 else:
                     order.updateOrder('Ready')
-    
+
+        
     for elem in orderList:
         msg = str(elem)
         msg = Markup(msg.replace('\n', '<br/>'))
@@ -390,6 +392,42 @@ def staff():
 
     return render_template('staff.html', msgList = msgList,error = error)
     
+@app.route('/stock',methods = ['GET', 'POST'])
+def stock():
+    
+    stock = system.stock
+    wholeStock = stock.whole
+    error = ""
+    print(wholeStock)
+    if request.method == 'POST':
+        
+        if 'refill' in request.form:
+            
+            quantity = request.form['quantity']
+            food = request.form['target']
+            print(food)
+            print(quantity)
+            
+            if quantity == '':
+                # print('ggggggggggggggggggggggggggg')
+                quantity = 0
+            
+            try:
+                quantity = int(quantity)
+            except Exception as er:
+                error = str(er)
+            else:
+                # print(mainsQty)
+                stock.increaseQuantity(food,quantity)
+                print(stock)
+
+    return render_template('stock.html', wholeStock = wholeStock,error=error)
+
+
+
+
+
+
 # to run the project
 if __name__ == "__main__":  # optionally add a name guard
     app.run(debug=True)
