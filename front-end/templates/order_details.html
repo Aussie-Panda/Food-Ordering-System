@@ -21,10 +21,13 @@
             <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
         {% endif %}
 
-    {% elif status == "Pending" or status == "Ready" or status == "Picked Up" %}
+    {% else %}
         {% if status != "Picked Up" %}
             <input type="submit" name="refresh" value="Refresh"><br/><br/>
 
+        {% elif status  == "Ready" %}
+            <input type="submit" name="pickup" value="Pick Up"><br/><br/>
+        
         {% elif status  == "Picked Up" %}
             Your order has been picked up! Thank you for ordering in Memberless Restaurant!<br/>
 

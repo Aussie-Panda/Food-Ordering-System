@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>Staff</h1>
+<font size="3" color="red">{{error}}</font><br />
+<form method="POST">
+    <h2>Orders List:</h2> 
+    
+        {% for elem in msgList[1:] %}
+            <input type="submit" name="prepare" value = "Prepare Order {{msgList.index(elem)}}"/>
+            <input type="submit" name="ready" value = "Order {{msgList.index(elem)}} is ready for pickup"/><br/>
+            {{elem}} <br/>
+            ------------------------------------------------------------------------
+            <br/>
+            <br/>
+        {% endfor %}
+</form>
+
+
+{% endblock %}

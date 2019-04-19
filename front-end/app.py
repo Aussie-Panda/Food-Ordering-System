@@ -325,6 +325,7 @@ def order_details(id, todo):
     if request.method == 'POST':
         # if user would like to refresh order status
         if 'refresh' in request.form:
+            status=order.orderStatus
             return render_template('order_details.html', msg=msg, status=status)
         
         # if user would like to send receipt to eamil
@@ -334,12 +335,61 @@ def order_details(id, todo):
         # if the order is not submitted, and user want to continue ordering
         elif 'continueOrder' in request.form:
             return redirect(url_for('menu', id=id))
-     
+        
+        elif 'pickup' in request.form:
+            order.updateOrder("Picked Up")
+            status=order.orderStatus
+            return render_template('order_details.html', msg=msg, status=status)
+    
     
     return render_template('order_details.html', msg=msg, status=status, todo=todo)
 
+#beside each order has a button to indicate preparing/ready for pickup
+@app.route('/staff',methods = ['GET', 'POST'])
+def staff():
+    msgList = [None]
+    # msg = ''
+    error = ''
+    orderList = system.order
 
 
+    if request.method == "POST":
+
+        if 'prepare' in request.form:
+            id = request.form['prepare'].split()[2]
+            try:
+                id = int(id)
+            except:
+                error = 'no such order'
+            else:
+                try:
+                    order = system.getNextOrder(None,id)
+                except SearchError as er:
+                    error = str(er)
+                else:
+                    order.updateOrder('Preparing')
+        
+        elif 'ready' in request.form:
+            id = request.form['ready'].split()[1]
+            try:
+                id = int(id)
+            except:
+                error = 'no such order'
+            else:
+                try:
+                    order = system.getNextOrder(None,id)
+                except SearchError as er:
+                    error = str(er)
+                else:
+                    order.updateOrder('Ready')
+    
+    for elem in orderList:
+        msg = str(elem)
+        msg = Markup(msg.replace('\n', '<br/>'))
+        msgList.append(msg)
+
+    return render_template('staff.html', msgList = msgList,error = error)
+    
 # to run the project
 if __name__ == "__main__":  # optionally add a name guard
     app.run(debug=True)
