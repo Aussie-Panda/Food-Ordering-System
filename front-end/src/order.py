@@ -1,6 +1,6 @@
 from src.food import Food
 from src.mains import Mains, Burger, Wrap
-from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
+from src.errors import StockError, SearchError, checkStock
 import copy
 
 class Order():
@@ -9,10 +9,10 @@ class Order():
         self._orderedItem = {}          # a dictionary, key=Food, value=int
         self._orderStatus = orderStatus # string
 
-    '''TODO
-    get a particular food from the order
+    '''
+    get a particular food from the order, raise Error if not found
     name: str, size = str
-    return value: the instance or Food (if found)/ None(if not found)
+    return value: the instance or Food (if found)
     '''
     def getFood(self,name,size=None):
         target = None
@@ -55,39 +55,6 @@ class Order():
             self._orderStatus = status
         
    
-        
-    '''TODO
-    Method to modify the order, this will automatically duplicate Mains item
-    food: a dictionary with key: instance of Food, value: int;
-    value(int): quantity that want to modify
-    item(str): food name
-    size(str): size of food(if has)
-    return value: None
-    '''
-    def modify(self, value=None, item=None, size=None):
-        assert(item != None)
-        assert(value != None)
-        
-        # If any invalid value is passed in, return None and empty error list
-        if value < 0:
-            return None
-
-        # 1. if item is in the order and value is set to 0, delete the item
-        # 2. elif item is in the list and value is > 0, overwrite the previous value
-        elif item in self.orderedItem:
-            if value == 0:
-                self.orderedItem.pop(item)
-            else:
-                self.orderedItem[item] = value
-
-        # 3. elif item is not in the list, add item with value
-        elif item not in self.orderedItem:
-            # if customer enter value 0, do nothing
-            if value != 0:
-                #  copy the original instance
-                new_i = copy.deepcopy(item)
-                self.orderedItem[new_i] = value
-
     '''
     method to add food into order
     item: an new instance of food
@@ -114,6 +81,7 @@ class Order():
     def deleteFood(self, item):
         self.orderedItem.pop(item)
 
+    # to print out the order detail
     def __str__(self):
         price = self.computeNetPrice()
         msg = ""

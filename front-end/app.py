@@ -1,7 +1,7 @@
 # import Flask library
-from flask import Flask, render_template, request, redirect, url_for, abort, Markup,session, make_response
-from init import bootstrap_system#, ser, orders
-from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
+from flask import Flask, render_template, request, redirect, url_for, abort, Markup, session
+from init import bootstrap_system
+from src.errors import StockError, SearchError, checkStock
 from src.shoppingCart import Cart
 import copy
 
@@ -9,10 +9,10 @@ OVER_WRITE = True
 
 # create a flask project, assigning to a variable called app
 app = Flask(__name__)
-app.secret_key = 'very-secret-123'  # Used to add entropy
-
+app.secret_key = 'very-secret-123' 
+# initialise system
 system = bootstrap_system()
-# Loads data
+# for session
 orders = {}
 
 # take in a Mains instance and extract information.
@@ -35,9 +35,8 @@ def formatMains(food):
             raise SearchError('food')  
         return info
 
-
 # take in a Drinks or Sides instance and extract information
-# info = {[size]: f'{volumn}{unit} {price}'
+# info = {[size]: f'{volumn}{unit} {price}'}
 def formatDS(food):
     info = {}
     for menu in [system.drinksMenu, system.sidesMenu]:
@@ -48,11 +47,12 @@ def formatDS(food):
         raise SearchError(f'{food}')
     return info
 
+# compute the total price of a cart
 def computePrice(cart):
     price = 0
     try:
         info = formatDS(cart.name)
-        print(f"DS info: {info}")
+        # print(f"DS info: {info}")
         for size in cart.items.keys():
             price += (int(info[size].split()[1]) * cart.items[size])
             
@@ -70,6 +70,7 @@ def computePrice(cart):
     # print(price)
     return price
 
+# fetch a cart with unique id from session
 def fetch_session_cart(id, food_name):
     # Creates a new cart first if the cart never existed
     id = int(id)
@@ -153,6 +154,7 @@ def menu(id):
     except SearchError as er:
         return render_template('errors.html', msg=str(er))
 
+    # two list store ordered item's name and it's corresponding size (append None if no size attribute)
     nameList = []
     sizeList = []
     error = ''
@@ -167,37 +169,41 @@ def menu(id):
     # print(sizeList)
     if request.method == "POST":
         
+        # delete a corresponding food
         if 'delete' in request.form:
             target = request.form['delete'].split()[1]
             size = sizeList[nameList.index(target)]
-            print(target, size)
+            #print(target, size)
             try:
                 food_to_delete = order.getFood(target,size)
             except SearchError as er:
-                raise(er)
-            print(food_to_delete)
+                error = str(er)
+            #print(food_to_delete)
             order.deleteFood(food_to_delete)
-            
+        
+        # customer click 'confirm'
         elif 'confirm' in request.form:
+            # if order is empty, refuse to confirm 
             if len(order.orderedItem) == 0:
                 error = 'Please order at least 1 item.'
                 return render_template('menu.html', id=id, order=order, mainsM=system.mainsMenu, drinksM=system.drinksMenu, sidesM=system.sidesMenu,error=error)
+
+            # if the order can be successfully confirm (no stockError), display order ditail
             else:
                 try:
-                    system.confirmOrder(order)
+                    order = system.confirmOrder(order)
                 except StockError as er:
                     error = str(er)
                 else:
-                    print(system.stock)
+                    # print(system.stock)
                     return redirect(url_for('order_details', id=id, todo='checkStatus'))
     
     # print(orderDetail)
     return render_template('menu.html',id=id, order=order, mainsM=system.mainsMenu, drinksM=system.drinksMenu, sidesM=system.sidesMenu, error=error)
 
-
+# display and order Mains 
 @app.route("/menu/<id>/Mains/<mains>", methods=["GET","POST"])
 def Mains(id,mains):
-    assert(mains!= None) # not necessary
     
     try:
         order = system.getNextOrder(None, id)
@@ -209,9 +215,11 @@ def Mains(id,mains):
     cart = fetch_session_cart(id, mains)
     error = ""
     if request.method == 'POST':
+        # if customer wants to add Buns/Patties/Ingredients
         if 'add' in request.form:
             target = request.form['add'][7:]
-            # print(target)
+            
+            # try to fetch the quantity
             try:
                 num = int(request.form[f'quantity{target}'])
             except:
@@ -219,23 +227,27 @@ def Mains(id,mains):
             else:
                 if target == 'Ingredients':
                     target = request.form['Ingredients']
-                    
+                
+                # delete the item is quantity is 0    
                 if num == 0:
                     cart.deleteFood(target)
                 else:
                     cart.addFood(target,num, OVER_WRITE)
-            
+        
+        # if customer confirm to order the Mains
         elif 'confirm' in request.form:
+            # copy an instance from menu
             new_food = copy.deepcopy(food)
+            # Burger has to have buns
             if (mains == 'Burger') and ('Buns' not in cart.items.keys()):
                 error = "Please order at least 1 buns."
             else:
-                # print(order)
+                # add ingredients
                 for elem in new_food.ingredientsMenu.keys():
                     if elem in cart.items:
                         new_food.changeIngredients(elem, cart.items[elem])
 
-                # print('after confirm', numBun)
+                # add addOn
                 for elem in new_food.addOn:
                     if elem in cart._items:
                         new_food.addOn[elem] = cart._items[elem]
@@ -243,8 +255,7 @@ def Mains(id,mains):
                 order.addFood(new_food, 1)
                 cart.empty()
                 # print(new_food)
-                price = computePrice(cart)
-                return render_template('mains.html', food=new_food, price=price, finish=True, error=error)
+                return render_template('mains.html', food=new_food, price=computePrice(cart), finish=True, error=error)
 
         elif 'cancel' in request.form:
             cart.empty()
@@ -253,15 +264,13 @@ def Mains(id,mains):
         elif 'return' in request.form:
             return redirect(url_for('menu', id=id))
 
-    price = computePrice(cart)
-    # print(f"errors is: {error}")
-    return render_template('mains.html', food=food, orderedItem=cart.items, price=price, error=error)
+    # compute current price in the cart and display
+    return render_template('mains.html', food=food, orderedItem=cart.items, price=computePrice(cart), error=error)
 
 
 @app.route("/menu/<id>/DrinksOrSides/<drinks_or_sides>", methods=["GET", "POST"])
 def DrinksOrSides(id, drinks_or_sides):
     
-    #print(info)
     error = ""
     cart = fetch_session_cart(id, drinks_or_sides)
     info = formatDS(drinks_or_sides)
@@ -270,27 +279,35 @@ def DrinksOrSides(id, drinks_or_sides):
         order = system.getNextOrder(None, id)
     except (SearchError, ValueError) as er:
         return render_template('errors.html',msg=str(er))
+
     if request.method == 'POST':
         if 'action' in request.form:
+            # if customer wants to delete all current selected item
             if request.form['action'] == 'Delete All':
                 cart.deleteFood(request.form['size'])
+
+            # if quantity is not empty string, try to fetch it
             elif request.form['quantity'] != '':
                 try:
                     quantity = int(request.form['quantity'])
                 except ValueError as er:
                     error = "Please insert integer."
                 else:
+                    # add or delete quantity
                     if request.form['action'] == 'Add':
                         cart.addFood(request.form['size'],quantity)
                     elif request.form['action'] == 'Delete':
                         cart.deleteFood(request.form['size'], quantity)
+
             else:
                 error='Please insert quantity with integer.'
 
+        # empty cart and return to menu
         elif 'cancel' in request.form:
             cart.empty()
             return redirect(url_for('menu', id=id))
         
+        # add food into order and empty cart
         elif 'confirm' in request.form:
             for size in cart.items.keys():
                 food = system.getFood(drinks_or_sides, size)
@@ -298,21 +315,20 @@ def DrinksOrSides(id, drinks_or_sides):
                 order.addFood(new_food, cart.items[size])
             
             cart.empty()
-            price = computePrice(cart)
-            return render_template('drinks_or_sides.html', food=drinks_or_sides, info=info, price=price, error=error, orderedItem=cart._items, finish=True)
+            return render_template('drinks_or_sides.html', food=drinks_or_sides, info=info, price=computePrice(cart), error=error, orderedItem=cart._items, finish=True)
                 
         elif 'return' in request.form:
             return redirect(url_for('menu', id=id))
-    price = computePrice(cart)
-    return render_template('drinks_or_sides.html', food=drinks_or_sides, info=info, price=price, error=error,orderedItem=cart._items)
+
+    return render_template('drinks_or_sides.html', food=drinks_or_sides, info=info, price=computePrice(cart), error=error,orderedItem=cart._items)
 
 
 
 # displaying order detail. If order is submitted, it allows user to refresh to get latest order status and optionally send email.
-# If order is not submitted, it allows user to continue order by redirecting to menu page.
+# If order is not submitted, it will notify user to continue order by go to home page.
+# if the order has been picked up, customer can still send receipt (if order has not been deleted by staff)
 @app.route('/order/details/<todo>/<id>', methods=['GET', 'POST'])
 def order_details(id, todo):
-    id = int(id)
     try:
         order = system.getNextOrder(None, id)
     except (SearchError, ValueError) as er:
@@ -326,9 +342,8 @@ def order_details(id, todo):
     if request.method == 'POST':
         # if user would like to refresh order status
         if 'refresh' in request.form:
-            status=order.orderStatus
-            print(status)
-            return render_template('order_details.html', msg=msg, status=status)
+            #print(status)
+            return redirect(url_for('order_details',id=id,todo=todo))
         
         # if user would like to send receipt to eamil
         elif 'sendEmail' in request.form and 'email' in request.form and request.form['email'] != "":
@@ -338,31 +353,48 @@ def order_details(id, todo):
         elif 'continueOrder' in request.form:
             return redirect(url_for('menu', id=id))
         
+        # simulate pick up action
         elif 'pickup' in request.form:
             order.updateOrder("Picked Up")
-            status=order.orderStatus
-            return render_template('order_details.html', msg=msg, status=status)
-    
-    
+            return redirect(url_for('order_details',id=id,todo=todo))
+
+    #print(msg)
     return render_template('order_details.html', msg=msg, status=status, todo=todo)
 
 #beside each order has a button to indicate preparing/ready for pickup
 @app.route('/staff',methods = ['GET', 'POST'])
 def staff():
-    msgList = [None]
-    # msg = ''
+    # list to store order detail in str
+    msgList = []
     error = ''
     orderList = system.order
 
-
     if request.method == "POST":
+        # if staff wnats to filter order
+        if 'filter' in request.form:
+            filterList = request.form.getlist('filter')
+            orderList = system.filterOrder(filterList)
 
-        if 'prepare' in request.form:
+        # if staff wants to delte a particular order
+        elif 'delete' in request.form:
+            id = request.form['delete'].split()[2]
+            try:
+                id = int(id)
+            except:
+                error = 'No such order'
+            else:
+                try:
+                    system.deleteOrder(id)
+                except SearchError as er:
+                    error = str(er)
+
+        # change orderStatus to 'Prepare'
+        elif 'prepare' in request.form:
             id = request.form['prepare'].split()[2]
             try:
                 id = int(id)
             except:
-                error = 'no such order'
+                error = 'No such order'
             else:
                 try:
                     order = system.getNextOrder(None,id)
@@ -371,12 +403,13 @@ def staff():
                 else:
                     order.updateOrder('Preparing')
         
+        # chagne orderStatus to 'Ready'
         elif 'ready' in request.form:
             id = request.form['ready'].split()[1]
             try:
                 id = int(id)
             except:
-                error = 'no such order'
+                error = 'No such order'
             else:
                 try:
                     order = system.getNextOrder(None,id)
@@ -385,32 +418,36 @@ def staff():
                 else:
                     order.updateOrder('Ready')
 
-        
+    # read python str in Markup
     for elem in orderList:
         msg = str(elem)
-        msg = Markup(msg.replace('\n', '<br/>'))
+        msg = Markup(msg.replace('\n', ' <br/>'))
         msgList.append(msg)
 
-    return render_template('staff.html', msgList = msgList,error = error)
+    return render_template('staff.html', msgList = msgList, statusList=system.statusList, error = error)
     
+# a page to dispaly current stock
 @app.route('/stock',methods = ['GET', 'POST'])
 def stock():
     
     stock = system.stock
     wholeStock = stock.whole
     error = ""
-    print(wholeStock)
+    # print(wholeStock)
     if request.method == 'POST':
         
-        if 'refill' in request.form:
-            
+        if 'refresh' in request.form:
+            return redirect(url_for('stock'))
+
+        # if staff wants to refill stock
+        elif 'refill' in request.form:
             quantity = request.form['quantity']
             food = request.form['target']
-            print(food)
-            print(quantity)
+            # print(food)
+            # print(quantity)
             
+            # set defualt quantity by 0
             if quantity == '':
-                # print('ggggggggggggggggggggggggggg')
                 quantity = 0
             
             try:
@@ -419,13 +456,13 @@ def stock():
                 error = str(er)
             else:
                 # print(mainsQty)
-                stock.increaseQuantity(food,quantity)
+                try:
+                    stock.increaseQuantity(food,quantity)
+                except Exception as er:
+                    error = str(er)
                 print(stock)
 
     return render_template('stock.html', wholeStock = wholeStock,error=error)
-
-
-
 
 
 

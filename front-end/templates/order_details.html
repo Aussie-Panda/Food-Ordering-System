@@ -1,17 +1,19 @@
 <!-- 
     This page display details of a specific order. By differentiate
-    the order status, user can either continue ordering or refresh
-    order status andsending email receipt.
+    the order status, user can either refresh order status, pick up
+    order or sending email receipt.
  -->
 
 {% extends 'base.html' %}
 {% block body %}
 
-<div>
-    <h1>Thanks for ordering in Memberless Restaurant! ᕙ( ͡° ͜ʖ ͡°)ᕗ</h1>
-    <h3>Your Order Detail:</h3>
-    {{msg}}
-</div>
+
+<h1>Thanks for ordering in Memberless Restaurant! ᕙ( ͡° ͜ʖ ͡°)ᕗ</h1>
+
+
+<h3>Your Order Detail:</h3>
+{{msg}}
+
 <form method="POST">
     <br/><br />
     {% if status == "Not Submitted" %}
@@ -21,17 +23,18 @@
             <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
         {% endif %}
 
+    
     {% else %}
-        {% if status  == "Ready" %}
+        {% if status == 'Picked Up' %}
+            Your order has been picked up! <br/>Feel free to order more in Memberless Restaurant!<br/>
+            ( ͡° ᴥ ͡°)<br/>
+
+        {% elif status  == "Ready" %}
             <input type="submit" name="pickup" value="Pick Up"><br/><br/>
         
 
-        {% elif status != "Picked Up" %}
+        {% else %}
             <input type="submit" name="refresh" value="Refresh"><br/><br/>
-
-        
-        {% elif status  == "Picked Up" %}
-            Your order has been picked up! Thank you for ordering in Memberless Restaurant!<br/>
 
         {% endif %}    
 
@@ -45,5 +48,4 @@
     {% endif %}
     <br/>
 </form>
-
 {% endblock %}

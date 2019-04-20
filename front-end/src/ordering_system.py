@@ -1,10 +1,11 @@
 from src.food import Food
 from src.order import Order
 from src.stock import Stock
-from src.errors import StockError, SearchError, bun_error, check_numBuns_error, checkStock
+from src.errors import StockError, SearchError, checkStock
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
+import copy
 
 class OrderingSystem():
     def __init__(self):
@@ -15,6 +16,7 @@ class OrderingSystem():
         self._drinksMenu = []       # a list of drinks
         self._sidesMenu = []        # a list of sides
         self._stock = Stock()
+        self._statusList = ['Not Submitted', 'Pending', 'Preparing', 'Ready', 'Picked Up']
 
     def newId(self):
         self._id += 1
@@ -28,23 +30,6 @@ class OrderingSystem():
         else:
             raise Exception('No such menu')
 
-    '''
-    def displayMenu(self):
-        print("--------MENU--------")
-        print("  ---Mains Menu---")
-        for item in self.mainsMenu:
-            print(item)
-
-        print(" ---Drinks Menu---")
-        for item in self.drinksMenu:
-            print(item)
-
-        print(" ---Sides Menu---")
-        for item in self.sidesMenu:
-            print(item)
-
-        print("-------End of Menu-------")
-    '''
     # pass in str and get food instance from menu
     # size: str (sml, med, lrg, Bottles, Cans)
     # name: str
@@ -103,29 +88,7 @@ class OrderingSystem():
             
             return order
     
-    '''
-    A function to add/modify the quantity of the food into the order list
-    id is a int indicating the order you want to modified
-    itemList is a list of food string (input from flask)
-    value is the amount of the food you want
-    
-    def modifyOrder(self, id, itemList, value):
-        #get the order that want to be modified
-        order = self.getNextOrder(None,id)
-        for food in itemList:
-            food = self.getFood(food)
-    '''
-    '''
-    Generate receipt of an order
-    order: an instance of Order
-    return value: string
-    
-    def printReceipt(self,order):
-        assert(order != None)
-        
-        receipt = f'---------Receipt--------\n{order}\n--------End of Receipt--------'
-        return receipt
-    '''
+  
     '''
     Get next order either by status or particular id.
     status: string, id: int
@@ -134,12 +97,13 @@ class OrderingSystem():
     '''
     def getNextOrder(self, status = None, id = None):
         target = None
-        id = int(id)
+        # get order by status
         if id is None:
             for i in self.order:
                 if i.orderStatus == status:
                     target = i
 
+        # get order by id
         elif id is not None:
             id = int(id)
             for i in self.order:
@@ -156,22 +120,36 @@ class OrderingSystem():
     status: string, id: int
     return value: order (if found)/None(if not found)
     '''
-    def deleteOrder(self, status = None, id = None):
+    def deleteOrder(self, id):
+        for i in self.order:
+            if i.orderId == id:
+                self.order.remove(i)
+                return i
 
-        if id is None:
-            for i in self.order:
-                if i.orderStatus == status:
-                    self.order.remove(i)
-                    return i
 
-        elif id is not None:
-            for i in self.order:
-                if i.orderId == id:
-                    self.order.remove(i)
-                    return i
+        raise SearchError("Order")     # if no order matches the requesting status or id
 
-        return None     # if no order matches the requesting status or id
-        
+
+    # to catch a list of order by status
+    def filterOrder(self, statusList):
+        NotSubmitted = ['Not Submitted']
+        Pending = ['Pending']
+        Preparing = ['Preparing']
+        Ready = ['Ready']
+        PickedUp = ['Picked Up']
+        for order in self.order:
+            for label in [NotSubmitted, Pending, Preparing, Ready, PickedUp]:
+                if order.orderStatus == label[0]:
+                    label.append(order)
+                    break
+
+        returnList = []
+        for label in [NotSubmitted, Pending, Preparing, Ready, PickedUp]:
+            if label[0] in statusList:
+                returnList += label[1:]
+
+        return returnList
+
 
     '''
     Properties
@@ -196,6 +174,10 @@ class OrderingSystem():
     @property
     def stock(self):
         return self._stock
+    
+    @property
+    def statusList(self):
+        return self._statusList
     
     '''
     setters
