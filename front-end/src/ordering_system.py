@@ -134,7 +134,7 @@ class OrderingSystem():
     '''
     def getNextOrder(self, status = None, id = None):
         target = None
-        id = int(id)
+        # id = int(id)
         if id is None:
             for i in self.order:
                 if i.orderStatus == status:

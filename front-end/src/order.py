@@ -54,7 +54,7 @@ class Order():
         else:
             self._orderStatus = status
         
-   
+
         
     '''TODO
     Method to modify the order, this will automatically duplicate Mains item
