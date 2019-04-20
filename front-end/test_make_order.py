@@ -101,8 +101,8 @@ def test_make_order(sys):
 	sys.confirmOrder(order)
 	# assert(not errors)
 	assert(order.computeNetPrice() == 12)
-	assert(sys.stock.sides['Nuggets'] == 9991)
-	assert(sys.stock.drinks['Lemonade(Cans)'] == 9997 )
+	assert(sys.stock.sides['Nuggets'] == 991)
+	assert(sys.stock.drinks['Lemonade(Cans)'] == 997 )
 
 def test_make_order_buger(sys):
 	order = sys.makeOrder()
@@ -121,12 +121,12 @@ def test_make_order_buger(sys):
 	# assert(not errors)
 	assert(order.computeNetPrice() == 24)
 
-	assert(sys.stock.drinks['Orange_Juice'] == 9500)
-	assert(sys.stock.ingredients['tomato'] == 9998)
-	assert(sys.stock.ingredients['cheddar_cheese'] == 9997)
-	assert(sys.stock.ingredients['buns'] == 9997)
-	assert(sys.stock.ingredients['patties'] == 9998)
-	assert(sys.stock.mains['Burger'] == 9999)
+	assert(sys.stock.drinks['Orange_Juice'] == 500)
+	assert(sys.stock.ingredients['tomato'] == 98)
+	assert(sys.stock.ingredients['cheddar_cheese'] == 97)
+	assert(sys.stock.ingredients['buns'] == 97)
+	assert(sys.stock.ingredients['patties'] == 98)
+	assert(sys.stock.mains['Burger'] == 99)
 
 def test_make_order_wrap(sys):
 	order = sys.makeOrder()
@@ -142,25 +142,35 @@ def test_make_order_wrap(sys):
 	# assert(not errors)
 	assert(order.computeNetPrice() == 16)
 
-	assert(sys.stock.sides['Fries'] == 9940)
-	assert(sys.stock.mains['Wrap'] == 9999)
-	assert(sys.stock.ingredients['tomato_sauce'] == 9997)
+	assert(sys.stock.sides['Fries'] == 940)
+	assert(sys.stock.mains['Wrap'] == 99)
+	assert(sys.stock.ingredients['tomato_sauce'] == 97)
 
 def test_out_of_stock(sys):
-	orderedFood = {sys.getFood('Nuggets', 'lrg'): 10, sys.getFood('Fries','sml'): 1}
-	order, errors = sys.makeOrder(orderedFood)
-	assert(len(errors) == 1 and 'Nuggets' in errors)
-	assert(order == None)
+	order = sys.makeOrder()
+	wrap = sys.getFood('Wrap')
+	wrap.addOn['Patties'] = 3000
+	wrap.changeIngredients('tomato_sauce', 3)
+	order.addFood(wrap,1)
+	fries = sys.getFood('Fries', 'lrg')
+	# orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	# order.addFood(wrap,1)
+	order.addFood(fries,1)
+	try:
+		sys.confirmOrder(order)
+	except StockError as er:
+		assert(True)
+	else:
+		assert(False)
+	# orderedFood = {sys.getFood('Orange_Juice', 'med'): 3, sys.getFood('Fries','sml'): 1}
+	# order, errors = sys.makeOrder(orderedFood)
+	# assert(len(errors) == 1 and 'Orange_Juice' in errors)
+	# assert(order == None)
 
-	orderedFood = {sys.getFood('Orange_Juice', 'med'): 3, sys.getFood('Fries','sml'): 1}
-	order, errors = sys.makeOrder(orderedFood)
-	assert(len(errors) == 1 and 'Orange_Juice' in errors)
-	assert(order == None)
-
-	orderedFood = {sys.getFood('Lemonade', 'Bottles'): 11, sys.getFood('Fries','sml'): 1}
-	order, errors = sys.makeOrder(orderedFood)
-	assert(len(errors) == 1 and 'Lemonade(Bottles)' in errors)
-	assert(order == None)
+	# orderedFood = {sys.getFood('Lemonade', 'Bottles'): 11, sys.getFood('Fries','sml'): 1}
+	# order, errors = sys.makeOrder(orderedFood)
+	# assert(len(errors) == 1 and 'Lemonade(Bottles)' in errors)
+	# assert(order == None)
 
 # def test_modify_order(sys):
 # 	orderedFood = {sys.getFood('Nuggets','sml'): 3, sys.getFood('Fries','lrg'): 15 , sys.getFood('Fries','sml'): 8}
@@ -250,25 +260,40 @@ def test_getNextOrder_if_stat_found(sys):
 # 	testGet = sys.getNextOrder(None,100)
 # 	assert(testGet == None)
 
-# def test_deleteOrder_if_id_not_found(sys):
-# 	wrap = sys.getFood('Wrap')
-# 	wrap.addPats(3)
-# 	wrap.changeIngredients('tomato_sauce', 3)
-# 	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
-# 	order, errors = sys.makeOrder(orderedFood)
-# 	testDelete = sys.deleteOrder(None, 3)
-# 	assert(testDelete == None)
-# 	assert(len(sys.order) == 1)
+def test_deleteOrder_if_id_not_found(sys):
+	order = sys.makeOrder()
+	wrap = sys.getFood('Wrap')
+	wrap.addOn['Patties'] = 3
+	wrap.changeIngredients('tomato_sauce', 3)
+	order.addFood(wrap,1)
+	fries = sys.getFood('Fries', 'lrg')
+	# orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	# order.addFood(wrap,1)
+	order.addFood(fries,1)
+	sys.confirmOrder(order)
+	testDelete = None
+	try:
+		testDelete = sys.deleteOrder(3)
+	except SearchError as er:
+		assert(True)
+	assert(testDelete == None)
+	assert(len(sys.order) == 1)
 
-# def test_deleteOrder_if_id_found(sys):
-# 	wrap = sys.getFood('Wrap')
-# 	wrap.addPats(3)
-# 	wrap.changeIngredients('tomato_sauce', 3)
-# 	orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
-# 	order, errors = sys.makeOrder(orderedFood)
-# 	testDelete = sys.deleteOrder(None, 1)
-# 	assert(testDelete == order)
-# 	assert(len(sys.order) == 0)
+def test_deleteOrder_if_id_found(sys):
+	order = sys.makeOrder()
+	wrap = sys.getFood('Wrap')
+	wrap.addOn['Patties'] = 3
+	wrap.changeIngredients('tomato_sauce', 3)
+	order.addFood(wrap,1)
+	fries = sys.getFood('Fries', 'lrg')
+	# orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	# order.addFood(wrap,1)
+	order.addFood(fries,1)
+	sys.confirmOrder(order)
+	testDelete = None
+	testDelete = sys.deleteOrder(1)
+	assert(testDelete == order)
+	assert(len(sys.order) == 0)
 
 # def test_deleteOrder_if_stat_not_found(sys):
 # 	wrap = sys.getFood('Wrap')
@@ -310,3 +335,41 @@ def test_getNextOrder_if_stat_found(sys):
 # 	testDelete = sys.deleteOrder(None,2)
 # 	assert(testDelete == order2)
 # 	assert(len(sys.order) == 0)
+
+def test_filterOrder(sys):
+	list1 = ['Pending']
+	list2 = ['Ready']
+	list3 = ['Pending','Ready']
+	order1 = sys.makeOrder()
+	wrap = sys.getFood('Wrap')
+	wrap.addOn['Patties'] = 3
+	wrap.changeIngredients('tomato_sauce', 3)
+	order1.addFood(wrap,1)
+	fries = sys.getFood('Fries', 'lrg')
+	# orderedFood = {wrap: 1, sys.getFood('Fries', 'lrg'): 1}
+	# order.addFood(wrap,1)
+	order1.addFood(fries,1)
+	sys.confirmOrder(order1)
+
+	order = sys.makeOrder()
+	burger = sys.getFood('Burger')
+	burger.addOn['Buns'] = 3
+	burger.addOn['Patties'] = 2
+	burger.changeIngredients('tomato', 2)
+	burger.changeIngredients('cheddar_cheese', 3)
+	order.addFood(burger,1)
+	sys.confirmOrder(order)
+
+	order3 = sys.makeOrder()
+	nuggets = sys.getFood('Nuggets','sml')
+	lemon = sys.getFood('Lemonade', 'Cans')
+	order3.addFood(nuggets,3)
+	order3.addFood(lemon,3)
+	sys.confirmOrder(order3)
+	order3.updateOrder('Ready')
+	res = sys.filterOrder(list1)
+	assert(len(res) == 2)
+	res2 = sys.filterOrder(list2)
+	assert(len(res2) == 1)
+	res = sys.filterOrder(list3)
+	assert(len(res) == 3)
