@@ -1,9 +1,20 @@
+<!-- 
+    This page is used by staff to check stock status (i.e. how many food stored). Staff
+    can optionally go back to order list page at any time, or select any item to refill
+    stock.
+ -->
+
 {% extends 'base.html' %}
 
 {% block body %}
 
 <h1>Stock</h1>
 <a href="{{ url_for('staff') }}">Go back to Order lists</a>
+
+<form method='POST'>
+    <input type='submit' name='refresh' value='Refresh Page'/><br/>
+</form>
+
 <h2>Current Stock:</h2> 
 
 {% for stock in wholeStock.keys() %}
@@ -13,7 +24,7 @@
     {% endfor %}
 {% endfor %}
 
-<br/><br/>
+
 <h2>Please select to refill:</h2>
 {% for stock in wholeStock %}
     <form method='POST'>
@@ -29,9 +40,7 @@
     </form>    
     
 {% endfor %}
+
 <font size="3" color="red">{{error}}</font><br />
-
-
-
 
 {% endblock %}

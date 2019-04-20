@@ -1,12 +1,20 @@
 from src.mains import Mains, Burger, Wrap
+
 class Stock():
     def __init__(self):
-        self._mains = { 'Burger': 0, 'Wrap': 0}
+        '''
+        self._mains = {'Burger': 0, 'Wrap': 0}
         self._drinks = {'Lemonade(Bottles)': 0, 'Lemonade(Cans)': 0, 'Orange_Juice': 0}
         self._sides = {'Fries': 0, 'Nuggets': 0, 'Sundae': 0}
-        self._ingredients = {'buns': 0, 'patties': 0, 'tomato': 0, 'lettuce' : 0, 'cheddar_cheese' : 0, 'swiss_cheese' : 0, 'tomato_sauce' : 0}
+        self._ingredients = {'buns': 0, 'patties': 0, 'tomato': 0, 'lettuce' : 0, 'cheddar_cheese' : 0, 'swisse_cheese' : 0, 'tomato_sauce' : 0}
         self._whole = {'Mains': self._mains, 'Drinks': self._drinks, 'Sides': self._sides, 'Ingredients': self._ingredients}
-
+        '''
+        self._mains = {}
+        self._drinks = {}
+        self._sides = {}
+        self._ingredients = {}
+        self._whole = {'Mains': self._mains, 'Drinks': self._drinks, 'Sides': self._sides, 'Ingredients': self._ingredients}
+        
     @property
     def mains(self):
         return self._mains
@@ -27,6 +35,33 @@ class Stock():
     def whole(self):
         return self._whole
 
+    # add (initialise) food into stock
+    def addFood(self, category, food, quantity):
+        if category in self.whole.keys():
+            stock = self.whole[category]
+
+            if category == 'Mains':
+                stock[food.name] = quantity
+
+                for addOn in food.addOn.keys():
+                    self._ingredients[addOn.lower()] = quantity
+
+                for ingred in food.ingredientsMenu.keys():
+                    self._ingredients[ingred.lower()] = quantity
+
+            elif category == 'Drinks':
+                if 'Juice' in food.name:
+                    stock[food.name] = quantity
+                else:
+                    name = f'{food.name}({food.size})'
+                    stock[name] = quantity
+
+            elif category == 'Sides':
+                stock[food.name] = quantity
+ 
+        else:
+            raise SearchError("Category")
+
     # consume food from stock
     def consumeFood(self,food):
         for item in food:
@@ -45,7 +80,9 @@ class Stock():
     def increaseQuantity(self, item, amount):
         assert(item != None)
         assert(amount != None)
-        
+        if amount < 0:
+            raise Exception("Amount cannot be negative :(")
+
         for stock in self.whole.keys():
             if item in self.whole[stock]:
                 self.whole[stock][item] += amount

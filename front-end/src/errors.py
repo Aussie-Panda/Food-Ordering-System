@@ -2,10 +2,9 @@ from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
 
+# is raised when the food is out of stock
 class StockError(Exception):
-	
 	def __init__(self, errors, msg=None):
-
 		if msg is None:
 			self._msg = "Those items are out of stock: %s"%(', '.join(errors))
 
@@ -18,6 +17,7 @@ class StockError(Exception):
 	def errors(self):
 		return self._errors
 
+# is raised when something cannot be found
 class SearchError(Exception):
     def __init__(self, obj):
         self._obj=obj
@@ -26,23 +26,10 @@ class SearchError(Exception):
         msg = 'Sorry, ' + self._obj + ' is not found. Please try again.'
         return msg
     
-class bun_error(Exception):
-
-	def __init__(self, errors, msg=None):
-	        if msg is None:
-	            msg = "Error occur in food system: %s"%(', '.join(errors.keys()))
-	        super().__init__(msg)
-	        self.errors = errors
-
-def check_numBuns_error(numBuns):
-    errors = {}
-
-    if (numBuns > 4):
-        errors['numBuns'] = 'Please input no more than 4 buns.'
 
 '''
 Check if a dictionary of food is out of stock
-return value: None (void function)
+return value: a list of out-of-stock food
 '''
 def checkStock(food, stock):
 	emptyFood = []
@@ -52,11 +39,11 @@ def checkStock(food, stock):
 		# for mains
 		if isinstance(item, Mains):
 			totalFood[item.name] = food[item]
-			if isinstance(item, Burger):
-				totalFood['buns'] =  item.numBun
-				totalFood['patties'] = item.numPat
-			elif isinstance(item, Wrap):
-				totalFood['patties'] = item.numPat
+			for addOn in item.addOn.keys():
+				if addOn not in totalFood:
+					totalFood[addOn.lower()] = item.addOn[addOn]
+				else:
+					totalFood[addOn.lower()] += item.addOn[addOn]
 
 			for i in item.ingredientsOrdered.keys():
 				totalFood[i] = item.ingredientsOrdered[i]
@@ -78,20 +65,8 @@ def checkStock(food, stock):
 
 	# print(totalFood)
 	for item in totalFood.keys():
-		if item in stock.mains:
-			if stock.mains[item] < totalFood[item]:
-				emptyFood.append(item)
-
-		elif item in stock.drinks:
-			if stock.drinks[item] < totalFood[item]:
-				emptyFood.append(item)
-
-		elif item in stock.sides:
-			if stock.sides[item] < totalFood[item]:
-				emptyFood.append(item)
-
-		elif item in stock.ingredients:
-			if stock.ingredients[item] < totalFood[item]:
+		for category in stock.whole.values():
+			if (item in category) and (category[item] < totalFood[item]):
 				emptyFood.append(item)
 	
 	return emptyFood
