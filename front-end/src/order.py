@@ -1,6 +1,6 @@
 from src.food import Food
 from src.mains import Mains, Burger, Wrap
-from src.errors import StockError, SearchError, checkStock
+from src.errors import StockError, SearchError
 import copy
 
 class Order():

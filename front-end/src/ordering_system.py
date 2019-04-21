@@ -1,7 +1,7 @@
 from src.food import Food
 from src.order import Order
 from src.stock import Stock
-from src.errors import StockError, SearchError, checkStock
+from src.errors import StockError, SearchError
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
@@ -76,7 +76,7 @@ class OrderingSystem():
     '''
     def confirmOrder(self, order):
         
-        emptyFood = checkStock(order.orderedItem, self.stock)
+        emptyFood = self.checkStock(order.orderedItem, self.stock)
         if emptyFood:
             raise StockError(emptyFood)
         
@@ -84,11 +84,27 @@ class OrderingSystem():
             order.updateOrder("Pending")
             # print(order)
             # consume food
-            self.stock.consumeFood(order.orderedItem)
+            self.consumeFood(order.orderedItem)
             
             return order
     
-  
+    # consume food from stock
+    def consumeFood(self, food):
+        for item in food:
+            self.stock.decreaseQuantity(item, food[item])
+
+            # for Mains, should further find out how many buns/patties/ingradients are consumed
+            if isinstance(item, Mains):
+                # subtract addOn quantity by standard mains's addOn quantity
+                standard = self.getFood(item.name)
+
+                for i in item.ingredientsOrdered.keys():
+                    self.stock.decreaseQuantity(i, item.ingredientsOrdered[i]) 
+                for a in item.addOn.keys():
+                    aL = a.lower()
+                    quantity = item.addOn[a] - standard.addOn[a]
+                    self.stock.decreaseQuantity(aL, quantity)
+
     '''
     Get next order either by status or particular id.
     status: string, id: int
@@ -150,6 +166,52 @@ class OrderingSystem():
 
         return returnList
 
+    '''
+    Check if a dictionary of food is out of stock
+    return value: a list of out-of-stock food
+    '''
+    def checkStock(self, food, stock):
+        emptyFood = []
+        totalFood = {}
+        # calculate total quantity/volumn for each type of food
+        for item in food.keys():
+            # for mains
+            if isinstance(item, Mains):
+                # only addtional addOn need to be consumed seperatly
+                standard = self.getFood(item.name)
+
+                totalFood[item.name] = food[item]
+                for addOn in item.addOn.keys():
+                    if addOn not in totalFood:
+                        totalFood[addOn.lower()] = (item.addOn[addOn] - standard.addOn[addOn])
+                    else:
+                        totalFood[addOn.lower()] += (item.addOn[addOn] - standard.addOn[addOn])
+
+                for i in item.ingredientsOrdered.keys():
+                    totalFood[i] = item.ingredientsOrdered[i]
+
+            # for drinks
+            elif isinstance(item, Drinks):
+                if 'Juice' in item.name:
+                    totalFood[item.name] = food[item] * item.volumn
+                else:
+                    target = f"{item.name}({item.size})"
+                    totalFood[target] = food[item]
+
+            # for sides
+            elif isinstance(item, Sides):
+                if item.name not in totalFood:
+                    totalFood[item.name] = food[item] * item.volumn
+                elif item.name in totalFood:
+                    totalFood[item.name] += food[item] * item.volumn
+
+        # print(totalFood)
+        for item in totalFood.keys():
+            for category in stock.whole.values():
+                if (item in category) and (category[item] < totalFood[item]):
+                    emptyFood.append(item)
+        
+        return emptyFood
 
     '''
     Properties

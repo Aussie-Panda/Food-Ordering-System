@@ -50,7 +50,7 @@ class Burger(Mains):
 
     def __init__(self,name, price):
         super().__init__(name,price)
-        self._addOn = {'Buns': 0, 'Patties': 0}
+        self._addOn = {'Buns': 2, 'Patties': 1}
 
     def computePrice(self):
         burger_price = self._price + self.numBun * self.bunPrice + self.numPat * self.patPrice
@@ -85,7 +85,7 @@ class Wrap(Mains):
 
     def __init__(self, name, price):
         super().__init__(name, price)
-        self._addOn = {'Patties': 0}
+        self._addOn = {'Patties': 1}
         self._numPat = 0
 
     def computePrice(self):

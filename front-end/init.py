@@ -1,8 +1,6 @@
 from src.ordering_system import OrderingSystem
-from src.food import Food
-from src.order import Order
 from src.stock import Stock
-from src.errors import StockError, checkStock
+from src.food import Food
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
@@ -14,8 +12,8 @@ def bootstrap_system():
     # initialise menu
     # Mains (name, price)
     mains = [
-        Burger('Burger', 5),
-        Wrap('Wrap', 4),
+        Burger('Burger', 3),
+        Wrap('Wrap', 2),
     ]
     
     # Drinks(name, price, size, volumn, unit)

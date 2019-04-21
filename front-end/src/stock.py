@@ -62,18 +62,7 @@ class Stock():
         else:
             raise SearchError("Category")
 
-    # consume food from stock
-    def consumeFood(self,food):
-        for item in food:
-            self.decreaseQuantity(item, food[item])
 
-            # for Mains, should further find out how many buns/patties/ingradients are consumed
-            if isinstance(item, Mains):
-                for i in item.ingredientsOrdered.keys():
-                    self.decreaseQuantity(i, item.ingredientsOrdered[i]) 
-                for a in item.addOn.keys():
-                    aL = a.lower()
-                    self.decreaseQuantity(aL, item.addOn[a])
     
     # item is a str, amount is int，size is str(Bottles, Cans)
     # for Juice, amount is in ml. For others amount is in whole 

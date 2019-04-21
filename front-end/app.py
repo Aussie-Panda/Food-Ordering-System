@@ -1,7 +1,7 @@
 # import Flask library
 from flask import Flask, render_template, request, redirect, url_for, abort, Markup, session
 from init import bootstrap_system
-from src.errors import StockError, SearchError, checkStock
+from src.errors import StockError, SearchError
 from src.shoppingCart import Cart
 import copy
 
@@ -30,7 +30,6 @@ def formatMains(food):
             info[a] = target.addOnMenu[a]
         
         info[food] = target.price
-        print(f"food is {food}")
         if not info:
             raise SearchError('food')  
         return info
@@ -50,24 +49,24 @@ def formatDS(food):
 # compute the total price of a cart
 def computePrice(cart):
     price = 0
+    # try get info if it's drinks/sides
     try:
         info = formatDS(cart.name)
-        # print(f"DS info: {info}")
         for size in cart.items.keys():
             price += (int(info[size].split()[1]) * cart.items[size])
-            
+    
+    # getting error means it's mains
     except SearchError:
         try:
             info = formatMains(cart.name)
-            print(f"Mains info: {info}")
-            # print(cart.items)
+
             for item in cart.items.keys():
                 price += (info[item] * cart.items[item])
-            price += info[cart.name]
+            # price += info[cart.name]
+
         except Exception as er:
             raise SearchError(f'{er} in conpute main price')
         
-    # print(price)
     return price
 
 # fetch a cart with unique id from session
@@ -75,23 +74,23 @@ def fetch_session_cart(id, food_name):
     # Creates a new cart first if the cart never existed
     id = int(id)
     if 'cart' not in session:
-        print('cart not in session')
+        # print('cart not in session')
         cart = Cart(id,food_name)
         session['cart'] = cart.id
         orders[cart.id] = cart
     else:
         # Check the current cookie is valid
-        print(f'cart {id} in session')
+        # print(f'cart {id} in session')
         try:
             target = orders[session['cart']]
             target.name = food_name
             return target
         except KeyError: 
-            print('exception raised: cart not in session')
+            # print('exception raised: cart not in session')
             cart = Cart(id, food_name)
             session['cart'] = cart.id
             orders[cart.id] = cart
-            print("session cookie from ex: " ,session['cart'])
+            # print("session cookie from ex: " ,session['cart'])
     return orders[session['cart']]
 
 # a handler of root URL
@@ -165,20 +164,18 @@ def menu(id):
             sizeList.append(None)
         finally:
             nameList.append(i.name)
-    # print(nameList)
-    # print(sizeList)
     if request.method == "POST":
         
         # delete a corresponding food
         if 'delete' in request.form:
             target = request.form['delete'].split()[1]
             size = sizeList[nameList.index(target)]
-            #print(target, size)
+
             try:
                 food_to_delete = order.getFood(target,size)
             except SearchError as er:
                 error = str(er)
-            #print(food_to_delete)
+
             order.deleteFood(food_to_delete)
         
         # customer click 'confirm'
@@ -195,35 +192,35 @@ def menu(id):
                 except StockError as er:
                     error = str(er)
                 else:
-                    # print(system.stock)
                     return redirect(url_for('order_details', id=id, todo='checkStatus'))
     
-    # print(orderDetail)
     return render_template('menu.html',id=id, order=order, mainsM=system.mainsMenu, drinksM=system.drinksMenu, sidesM=system.sidesMenu, error=error)
 
 # display and order Mains 
 @app.route("/menu/<id>/Mains/<mains>", methods=["GET","POST"])
 def Mains(id,mains):
-    
     try:
         order = system.getNextOrder(None, id)
         food = system.getFood(mains)
     except SearchError as er:
         return render_template('errors.html', msg=str(er))
     
-    # print('food is', food, 'type is ', type(food))
     cart = fetch_session_cart(id, mains)
     error = ""
     if request.method == 'POST':
+
+        if 'action' in request.form:
+            cart.action = request.form['action']
         # if customer wants to add Buns/Patties/Ingredients
-        if 'add' in request.form:
+        elif 'add' in request.form:
             target = request.form['add'][7:]
             
             # try to fetch the quantity
             try:
                 num = int(request.form[f'quantity{target}'])
+                assert(num >= 0)
             except:
-                error = "Please insert integer"
+                error = "Please insert positive integer"
             else:
                 if target == 'Ingredients':
                     target = request.form['Ingredients']
@@ -236,36 +233,54 @@ def Mains(id,mains):
         
         # if customer confirm to order the Mains
         elif 'confirm' in request.form:
+            finish = True
             # copy an instance from menu
             new_food = copy.deepcopy(food)
-            # Burger has to have buns
-            if (mains == 'Burger') and ('Buns' not in cart.items.keys()):
-                error = "Please order at least 1 buns."
-            else:
-                # add ingredients
-                for elem in new_food.ingredientsMenu.keys():
-                    if elem in cart.items:
-                        new_food.changeIngredients(elem, cart.items[elem])
+            # if the mains is customed
+            if cart.action == 'Custom':
+                # Burger has to have buns
+                
+                if not cart.items:
+                    error = "Please order at least 1 items"
+                    finish = False
 
-                # add addOn
-                for elem in new_food.addOn:
-                    if elem in cart._items:
-                        new_food.addOn[elem] = cart._items[elem]
+                else:
+                    # add ingredients
+                    for elem in new_food.ingredientsMenu.keys():
+                        if elem in cart.items:
+                            new_food.changeIngredients(elem, cart.items[elem])
 
-                order.addFood(new_food, 1)
-                cart.empty()
-                # print(new_food)
-                return render_template('mains.html', food=new_food, price=computePrice(cart), finish=True, error=error)
+                    # add addOn
+                    for elem in new_food.addOn:
+                        if elem in cart.items:
+                            new_food.addOn[elem] += cart.items[elem]
+
+                    order.addFood(new_food, 1)
+                
+            # if the mains is standard
+            elif cart.action == 'Standard':
+                try:
+                    quantity = int(request.form['quantity'])
+                    assert(quantity > 0)
+
+                except Exception as er:
+                    error = "Please insert positive integer"
+                    finish = False
+                else:
+                    order.addFood(new_food, quantity)
+
+            return render_template('mains.html', food=new_food, action=cart.action, orderedItem=cart.items, price=computePrice(cart), finish=finish, error=error)
 
         elif 'cancel' in request.form:
             cart.empty()
             return redirect(url_for('menu', id=id))
         
         elif 'return' in request.form:
+            cart.empty()
             return redirect(url_for('menu', id=id))
 
     # compute current price in the cart and display
-    return render_template('mains.html', food=food, orderedItem=cart.items, price=computePrice(cart), error=error)
+    return render_template('mains.html', food=food, action=cart.action, orderedItem=cart.items, price=computePrice(cart), error=error)
 
 
 @app.route("/menu/<id>/DrinksOrSides/<drinks_or_sides>", methods=["GET", "POST"])
@@ -342,7 +357,6 @@ def order_details(id, todo):
     if request.method == 'POST':
         # if user would like to refresh order status
         if 'refresh' in request.form:
-            #print(status)
             return redirect(url_for('order_details',id=id,todo=todo))
         
         # if user would like to send receipt to eamil
@@ -358,7 +372,6 @@ def order_details(id, todo):
             order.updateOrder("Picked Up")
             return redirect(url_for('order_details',id=id,todo=todo))
 
-    #print(msg)
     return render_template('order_details.html', msg=msg, status=status, todo=todo)
 
 #beside each order has a button to indicate preparing/ready for pickup
@@ -433,7 +446,7 @@ def stock():
     stock = system.stock
     wholeStock = stock.whole
     error = ""
-    # print(wholeStock)
+
     if request.method == 'POST':
         
         if 'refresh' in request.form:
@@ -443,8 +456,6 @@ def stock():
         elif 'refill' in request.form:
             quantity = request.form['quantity']
             food = request.form['target']
-            # print(food)
-            # print(quantity)
             
             # set defualt quantity by 0
             if quantity == '':
@@ -455,12 +466,10 @@ def stock():
             except Exception as er:
                 error = str(er)
             else:
-                # print(mainsQty)
                 try:
                     stock.increaseQuantity(food,quantity)
                 except Exception as er:
                     error = str(er)
-                print(stock)
 
     return render_template('stock.html', wholeStock = wholeStock,error=error)
 

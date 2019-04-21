@@ -39,7 +39,7 @@ Week 6: Meeting date: 25/03/2019
 Decisions:
 Responsibilities:
 - For Assignment: Henry makes a UML class diagram
-- Yanning and katrina edit it
+- Yanning and Katrina edit it
 Milestones achieved/Reflection:
 Obstacles: Not sure if we need to create so many subclasses
 
@@ -59,17 +59,21 @@ Week 8: Meeting date: 08/04/2019
 Decisions:
 Responsibilities:
 - Henry writes flask for Staff
-- Yanning writes flask for menu (ordering) process
-- Kat does rest
+- Yanning writes flask for ordering process
+- Katrina does the rest
 Milestones achieved/Reflection:
 - Henry didn't do his part
 Obstacles:
 - Henry doesn't understand flask
+Solution:
+- Yanning did Henry's part
+- Katrina improved it and applied OCP
 
 Week 9: Meeting date: 15/04/2019
 Decisions:
-- Yanning and Katrina writes up remaining flask codes
 Responsibilities:
-- Henry creates the ER diagram and updates log book
+- Yanning  writes up remaining flask codes and all the tests
+- Katrina improved the code with OCP principles.
+- Henry creates the ER diagram, updates log book and velocity chart
 Milestones achieved/Reflection:
 Obstacles:

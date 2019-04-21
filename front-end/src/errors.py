@@ -1,3 +1,4 @@
+from src.ordering_system import *
 from src.mains import Mains, Burger, Wrap
 from src.drinks import Drinks
 from src.sides import Sides
@@ -27,47 +28,5 @@ class SearchError(Exception):
         return msg
     
 
-'''
-Check if a dictionary of food is out of stock
-return value: a list of out-of-stock food
-'''
-def checkStock(food, stock):
-	emptyFood = []
-	totalFood = {}
-	# calculate total quantity/volumn for each type of food
-	for item in food.keys():
-		# for mains
-		if isinstance(item, Mains):
-			totalFood[item.name] = food[item]
-			for addOn in item.addOn.keys():
-				if addOn not in totalFood:
-					totalFood[addOn.lower()] = item.addOn[addOn]
-				else:
-					totalFood[addOn.lower()] += item.addOn[addOn]
 
-			for i in item.ingredientsOrdered.keys():
-				totalFood[i] = item.ingredientsOrdered[i]
-
-		# for drinks
-		elif isinstance(item, Drinks):
-			if 'Juice' in item.name:
-				totalFood[item.name] = food[item] * item.volumn
-			else:
-				target = f"{item.name}({item.size})"
-				totalFood[target] = food[item]
-
-		# for sides
-		elif isinstance(item, Sides):
-			if item.name not in totalFood:
-				totalFood[item.name] = food[item] * item.volumn
-			elif item.name in totalFood:
-				totalFood[item.name] += food[item] * item.volumn
-
-	# print(totalFood)
-	for item in totalFood.keys():
-		for category in stock.whole.values():
-			if (item in category) and (category[item] < totalFood[item]):
-				emptyFood.append(item)
-	
-	return emptyFood
 	

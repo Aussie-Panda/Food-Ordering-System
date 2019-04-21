@@ -3,6 +3,7 @@ class Cart:
         self._id = id
         self._items = {}
         self._name = name
+        self._action = None
 
     def addFood(self, food, quantity, overwrite = False):
         assert(type(food) is str)
@@ -32,6 +33,7 @@ class Cart:
     
     def empty(self):
         self._items.clear()
+        self._action = None
     
     @property
     def id(self):
@@ -44,7 +46,16 @@ class Cart:
     @property
     def name(self):
         return self._name
+
+    @property
+    def action(self):
+        return self._action
     
+    @action.setter
+    def action(self,action):
+        assert(type(action) is str)
+        self._action = action
+
     @name.setter
     def name(self,name):
         assert(type(name) is str)
