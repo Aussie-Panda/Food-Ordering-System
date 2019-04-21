@@ -305,8 +305,9 @@ def DrinksOrSides(id, drinks_or_sides):
             elif request.form['quantity'] != '':
                 try:
                     quantity = int(request.form['quantity'])
-                except ValueError as er:
-                    error = "Please insert integer."
+                    assert(quantity > 0)
+                except:
+                    error = "Please insert positive integer."
                 else:
                     # add or delete quantity
                     if request.form['action'] == 'Add':
@@ -381,15 +382,12 @@ def staff():
     msgList = []
     error = ''
     orderList = system.order
+    filterList = [None]
 
     if request.method == "POST":
-        # if staff wnats to filter order
-        if 'filter' in request.form:
-            filterList = request.form.getlist('filter')
-            orderList = system.filterOrder(filterList)
-
+        
         # if staff wants to delte a particular order
-        elif 'delete' in request.form:
+        if 'delete' in request.form:
             id = request.form['delete'].split()[2]
             try:
                 id = int(id)
@@ -431,13 +429,21 @@ def staff():
                 else:
                     order.updateOrder('Ready')
 
+        # if staff wnats to filter order
+        if 'filter' in request.form:
+            if request.form['filter'] == 'All':
+                pass
+            else:
+                filterList = [request.form['filter']]
+                orderList = system.filterOrder(filterList)
+
     # read python str in Markup
     for elem in orderList:
         msg = str(elem)
         msg = Markup(msg.replace('\n', ' <br/>'))
         msgList.append(msg)
 
-    return render_template('staff.html', msgList = msgList, statusList=system.statusList, error = error)
+    return render_template('staff.html', msgList = msgList, filter=filterList[0], statusList=system.statusList, error = error)
     
 # a page to dispaly current stock
 @app.route('/stock',methods = ['GET', 'POST'])
