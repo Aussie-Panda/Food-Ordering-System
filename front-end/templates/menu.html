@@ -1,0 +1,52 @@
+<!-- 
+	This page is menu page. All item is a hyperlink that link to it's own order page.
+	Below the menu, the current order with unique order id is displayed. Customer can
+	optionally delete any item within the order by clicking 'Delete'.
+ -->
+ 
+{% extends 'base.html' %}
+{% block body %}
+<h1>Menu</h1>
+
+<h2 color="red">Your Order ID is: {{id}}</h2>
+
+	
+<h3>Mains</h3>
+    {% for i in mainsM %}
+        <a href="{{ url_for('Mains', id=id, mains=i.name) }}">{{i.name}}</a><br />
+    {% endfor %}
+
+<h3>Drinks</h3>
+    {% for i in drinksM %}
+    	<!-- get rid of duplicate -->
+    	{% if i.name != drinksM[drinksM.index(i)-1].name %}
+        	<a href="{{ url_for('DrinksOrSides', id=id, drinks_or_sides=i.name) }}">{{i.name}}</a><br />
+    	{% endif %}
+    {% endfor %}
+
+<h3>Sides</h3>
+    {% for i in sidesM %}
+    	<!-- get rid of duplicate -->
+    	{% if i.name != sidesM[sidesM.index(i)-1].name %}
+	        <a href="{{ url_for('DrinksOrSides', id=id, drinks_or_sides=i.name) }}">{{i.name}}</a><br />
+		{% endif %}
+    {% endfor %}
+
+
+<div>
+	<h2>Current Order:</h2>
+	<form method='POST'>
+		Order id: {{order.orderId}}<br/><br/>
+		Order items:<br />
+		{% for i in order.orderedItem.keys() %}
+			{{i}} * {{order.orderedItem[i]}} <input type="submit" name="delete" value="Delete {{i.name}}"/><br/>
+		{% endfor %}
+		<br/>
+		Order Status: {{order.orderStatus}}<br/><br/>
+		Total Price: ${{order.computeNetPrice()}}<br/><br>
+
+		<input type="submit" name="confirm" value="Confirm" />
+		<font size="3" color="red">{{error}}</font><br />
+	</form>
+</div>
+{% endblock %}

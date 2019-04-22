@@ -1,0 +1,47 @@
+<!-- 
+	This page is used by staff to update order status and check stock. Staff can optionally
+	filter and view only a group of order according to orderStatus. For each submitted order,
+	staff can choose to 'Prepare' or notify that order is 'Ready'. If the order is picked up by
+	customer, staff can optionally delete the order.
+ -->
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>Staff</h1>
+
+<a href="{{ url_for('stock') }}">Stock</a><br/><br/>
+<font size="3" color="red">{{error}}</font>
+
+<form method="POST">
+		Only Show: 
+        <select name="filter">
+            <option value="All" {% if filter == "All" %} selected {% endif %}>All</option>
+    		{% for status in statusList %}
+    			<option value="{{status}}" {% if filter == status %} selected {% endif %}>{{status}}</option>
+    		{% endfor %}
+        </select>
+        <input type='submit' name='refresh' value='Refresh Page'/>
+
+<h2>Orders List:</h2> 
+
+    {% for elem in msgList %}
+
+    	{% if elem.split()[-5] == 'Up' %}
+    		<input type='submit' name='delete' value='Delete Order {{elem.split()[2]}}'/><br/>
+
+    	{% elif elem.split()[-6] == 'Not' %}
+
+    	{% else %}
+            <input type='submit' name='prepare' value='Prepare Order {{elem.split()[2]}}'/>
+            <input type='submit' name='ready' value='Order {{elem.split()[2]}} is ready to pick up'/><br/>
+        {% endif %}
+        {{elem}}<br/>
+        ------------------------------------------------------------------------
+        <br/>
+        <br/>
+    {% endfor %}
+</form>
+
+
+{% endblock %}

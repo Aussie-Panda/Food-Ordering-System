@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h2>{{food}}</h2>
+
+<div>
+	<form method="POST">
+		Size:
+		<select name="size">
+			{% for size in info.keys() %}
+				<option value={{size}}>{{size}}({{info[size].split()[0]}}) ${{info[size].split()[1]}}</option>
+			{% endfor %}
+		</select>
+		<br /><br />
+
+		Quantity:
+		<input name="quantity" placeholder="Please insert integer"/>
+		<input type="submit" name="action" value="Add"/>
+		<input type="submit" name="action" value="Delete"/>
+		<input type="submit" name="action" value="Delete All"/><br />
+		<font size="3" color="red">{{error}}</font><br />
+		<br />
+		
+		{% if finish == True%}
+			Thank you for ordering {{food}}! You can return to menu now :D<br/>
+			<input type="submit" name="return" value="Return to Menu"/>
+		{% else %}
+			You have ordered:<br />
+			{% for i in orderedItem.keys() %}
+				{{i}} * {{orderedItem[i]}}<br />
+			{% endfor %}
+			<br />
+			Current Price: ${{price}} <br />
+			<input type="submit" name="confirm" value="Confirm"/>
+			<input type="submit" name="cancel" value="Cancel"/>
+
+		{% endif %}
+	</form>
+	<br /><br />
+	
+</div>
+
+
+{% endblock %}
+

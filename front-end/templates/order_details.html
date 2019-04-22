@@ -1,0 +1,51 @@
+<!-- 
+    This page display details of a specific order. By differentiate
+    the order status, user can either refresh order status, pick up
+    order or sending email receipt.
+ -->
+
+{% extends 'base.html' %}
+{% block body %}
+
+
+<h1>Thanks for ordering! ᕙ( ͡° ͜ʖ ͡°)ᕗ</h1>
+
+
+<h3>Your Order Detail:</h3>
+{{msg}}
+
+<form method="POST">
+    <br/><br />
+    {% if status == "Not Submitted" %}
+        {% if todo == "checkStatus" %}
+            <font size="3" color="red">Your Order has not been submitted, please continue ordering.</font><br/><br/>
+        {% elif todo == "continueOrder" %}
+            <input type="submit" name="continueOrder" value="Yes it is my order, continue ordering"/>
+        {% endif %}
+
+    
+    {% else %}
+        {% if status == 'Picked Up' %}
+            Your order has been picked up! <br/>Feel free to order more in Memberless Restaurant!<br/>
+            ( ͡° ᴥ ͡°)<br/>
+
+        {% elif status  == "Ready" %}
+            <input type="submit" name="pickup" value="Pick Up"><br/><br/>
+        
+
+        {% else %}
+            <input type="submit" name="refresh" value="Refresh"><br/><br/>
+
+        {% endif %}    
+
+        Would you like us to email you the receipt?<br/>
+        If yes, please insert your email: <input name="email" placeholder="example@abc.com"/><br/>
+        <br/>
+        <input type="submit" name="sendEmail" value="Send Email"/><br/><br/>
+        {% if send == True%}
+            Your receipt has been sent to "{{email}}". Thank you for ordering!<br/>
+        {% endif %}
+    {% endif %}
+    <br/>
+</form>
+{% endblock %}
