@@ -10,22 +10,21 @@
 
 <h1>Staff</h1>
 
-<a href="{{ url_for('stock') }}">Stock</a>
+<a href="{{ url_for('stock') }}">Stock</a><br/><br/>
 <font size="3" color="red">{{error}}</font>
 
 <form method="POST">
-		<input type='submit' name='refresh' value='Refresh Page'/><br/><br/>
-		Only Show (can select multiple): 
-		{% for status in statusList %}
-			<input type="checkbox" name="filter" value='{{status}}'/>{{status}}
-		{% endfor %}
-</form>
-
+		Only Show: 
+        <select name="filter">
+            <option value="All" {% if filter == "All" %} selected {% endif %}>All</option>
+    		{% for status in statusList %}
+    			<option value="{{status}}" {% if filter == status %} selected {% endif %}>{{status}}</option>
+    		{% endfor %}
+        </select>
+        <input type='submit' name='refresh' value='Refresh Page'/>
 
 <h2>Orders List:</h2> 
 
-
-<form method="POST">
     {% for elem in msgList %}
 
     	{% if elem.split()[-5] == 'Up' %}
