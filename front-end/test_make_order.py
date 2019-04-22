@@ -122,6 +122,21 @@ def test_make_order_default_buger(sys):
 	# assert(not errors)
 	assert(order.computeNetPrice() == 19)
 
+def check_stock_after_making_std_order(sys):
+	order = sys.makeOrder()
+	burger = sys.getFood('Burger')
+	# burger.addOn['Buns'] = 3
+	# burger.addOn['Patties'] = 2
+	burger.changeIngredients('tomato', 2)
+	burger.changeIngredients('cheddar_cheese', 3)
+	order.addFood(burger,1)
+	orange = sys.getFood('Orange_Juice','sml')
+	order.addFood(orange,2)
+	# orderedFood = {burger: 1, sys.getFood('Orange_Juice','sml'): 2}
+	# order, errors = sys.makeOrder(orderedFood)
+	# print(sys.stock)
+	sys.confirmOrder(order)
+	# assert(not errors)
 	assert(sys.stock.drinks['Orange_Juice'] == 500)
 	assert(sys.stock.ingredients['tomato'] == 98)
 	assert(sys.stock.ingredients['cheddar_cheese'] == 97)
@@ -146,6 +161,24 @@ def test_make_order_customize_buger(sys):
 	sys.confirmOrder(order)
 	# assert(not errors)
 	assert(order.computeNetPrice() == 22)
+
+
+def test_check_stock_after_making_customiz_order(sys):
+	order = sys.makeOrder()
+	burger2 = sys.getFood('Burger')
+	burger = copy.deepcopy(burger2)
+	burger.addOn['Buns'] = 3
+	burger.addOn['Patties'] = 2
+	burger.changeIngredients('tomato', 2)
+	burger.changeIngredients('cheddar_cheese', 3)
+	order.addFood(burger,1)
+	orange = sys.getFood('Orange_Juice','sml')
+	order.addFood(orange,2)
+	# orderedFood = {burger: 1, sys.getFood('Orange_Juice','sml'): 2}
+	# order, errors = sys.makeOrder(orderedFood)
+	# print(sys.stock)
+	sys.confirmOrder(order)
+	# assert(not errors)
 
 	assert(sys.stock.drinks['Orange_Juice'] == 500)
 	assert(sys.stock.ingredients['tomato'] == 98)
@@ -172,7 +205,7 @@ def test_make_order_wrap(sys):
 	assert(sys.stock.mains['Wrap'] == 99)
 	assert(sys.stock.ingredients['tomato_sauce'] == 97)
 
-def test_out_of_stock(sys):
+def test_check_stock_if_out_of_stock(sys):
 	order = sys.makeOrder()
 	wrap2 = sys.getFood('Wrap')
 	wrap = copy.deepcopy(wrap2)
