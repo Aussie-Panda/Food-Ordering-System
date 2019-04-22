@@ -101,11 +101,11 @@ def home():
         if 'action' in request.form:
             # if user click "Check Status" button, ask for order ID
             if request.form['action'] == 'Check Status':
-                return render_template('home.html', checkStatus=True)
+                return render_template('home.html', name=system.name, checkStatus=True)
             
             # if user click "Continue Order button, ask for order ID
             elif request.form['action'] == 'Continue my order':
-                return render_template('home.html', continueOrder=True)
+                return render_template('home.html', name=system.name, continueOrder=True)
             
             # if user click "Make New Order" button, create new order and redirect to menu page
             elif request.form['action'] == 'Make New Order':
@@ -121,7 +121,7 @@ def home():
                 try:
                     order = system.getNextOrder(None, id)
                 except (SearchError, ValueError) as er:
-                    return render_template('home.html', form=request.form, checkStatus=True,error=str(er))
+                    return render_template('home.html', name=system.name, form=request.form, checkStatus=True,error=str(er))
                 
                 # if no error occur, redirect to order detail page
                 else:
@@ -133,17 +133,17 @@ def home():
                 try:
                     order = system.getNextOrder(None, id)
                 except (SearchError, ValueError) as er:
-                    return render_template('home.html', form=request.form, continueOrder=True, error=str(er))
+                    return render_template('home.html', name=system.name,form=request.form, continueOrder=True, error=str(er))
                 
                 # if no error occur and the order is not submitted, redirect to order detail page
                 else:
                     if order.orderStatus != 'Not Submitted':
                         er = "Your order has been submitted, please go to 'Check Status'"
-                        return render_template('home.html',  form=request.form, continueOrder=True, error=er)
+                        return render_template('home.html', name=system.name, form=request.form, continueOrder=True, error=er)
                     else:
                         return redirect(url_for('order_details', id=id, todo='continueOrder'))
             
-    return render_template('home.html')
+    return render_template('home.html', name=system.name)
 
 # displaying menu and handle ordering
 @app.route("/menu/<id>", methods=["GET", "POST"])

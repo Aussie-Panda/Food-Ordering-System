@@ -8,6 +8,7 @@ from flask import Flask
 
 def bootstrap_system():
     system = OrderingSystem()
+    system.name = "Memberless Restaurant"
     
     # initialise menu
     # Mains (name, price)
