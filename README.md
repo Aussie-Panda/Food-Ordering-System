@@ -1,3 +1,5 @@
+Project for "Software Engineering Fundamentals" course
+
 Team name: memberlessTeam
 
 Name: Yanning Cao
